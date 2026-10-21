@@ -1,0 +1,2 @@
+# Optional Linux deployment server. Local python server.py remains stdlib-only.
+gunicorn==26.2.0

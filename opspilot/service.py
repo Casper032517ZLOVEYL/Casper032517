@@ -40,7 +40,8 @@ def analyze_request(payload, settings=None, client=None):
     # Only aggregates and evidence are sent, not uploaded raw records or filenames.
     evidence = {"question": payload["question"], "plan": result["plan"], "range": result["range"],
                 "current": result["current"], "previous": result["previous"],
-                "details": result["details"], "formula": result["formula"], "knowledge": result["knowledge"]}
+                "details": result["details"], "formula": result["formula"], "knowledge": result["knowledge"],
+                "currency":result.get("currency"), "data_contract":result.get("data_contract")}
     usage = None
     try:
         content, usage = (client or complete)(settings, evidence)

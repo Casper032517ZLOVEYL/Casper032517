@@ -1,0 +1,12 @@
+.git
+.env
+.env.*
+__pycache__
+node_modules
+.openai
+runtime
+docs
+tests
+evaluation
+*.zip
+*.xlsx

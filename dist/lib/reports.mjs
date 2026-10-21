@@ -35,18 +35,23 @@ export function markdownReport({ source, question, result }) {
         : []),
       "",
     );
+  if (result.data_contract)
+    lines.push(
+      `销售口径：${result.data_contract.revenueBasis === "paid" ? "用户声明的已支付金额" : "正向销售金额，支付状态未验证"}；声明补零记录：${result.data_contract.zeroFilled}`,
+      "",
+    );
   if (result.details) {
     lines.push(
       "## 渠道证据",
       "",
-      `指标：${METRICS[result.plan.metric].name}（${METRICS[result.plan.metric].unit}）`,
+      `指标：${METRICS[result.plan.metric].name}（${METRICS[result.plan.metric].unit === "货币" ? result.currency : METRICS[result.plan.metric].unit}）`,
       "",
       "| 渠道 | 本期 | 前期 |",
       "| --- | ---: | ---: |",
     );
     for (const row of result.details)
       lines.push(
-        `| ${md(row.channel)} | ${format(row.current, result.plan.metric)} | ${format(row.previous, result.plan.metric)} |`,
+        `| ${md(row.channel)} | ${format(row.current, result.plan.metric, result.currency)} | ${format(row.previous, result.plan.metric, result.currency)} |`,
       );
     lines.push("", "渠道贡献仅描述变化来源，不能证明因果关系。", "");
   }

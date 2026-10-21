@@ -128,10 +128,6 @@ export async function readXlsx(buffer) {
     Object.fromEntries(
       header.map((h, i) => {
         let v = r[i] ?? "";
-        if ((h === "date" || h === "日期") && /^\d+(\.0+)?$/.test(v))
-          v = new Date(Date.UTC(1899, 11, 30) + Number(v) * 86400000)
-            .toISOString()
-            .slice(0, 10);
         return [h, v];
       }),
     ),

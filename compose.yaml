@@ -1,0 +1,17 @@
+services:
+  opspilot:
+    build: .
+    ports:
+      - "127.0.0.1:8501:8501"
+    env_file: .env
+    environment:
+      OPSPILOT_TRUSTED_HOSTS: "localhost,127.0.0.1"
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,noexec,nosuid
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 512m
+    pids_limit: 128
+    restart: unless-stopped

@@ -1,0 +1,37 @@
+{
+  "title": "UCI Online Retail · UK November 2011",
+  "citation": "Chen, D. (2015). Online Retail [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C5BW33",
+  "source_url": "https://archive.ics.uci.edu/dataset/352/online+retail",
+  "download_url": "https://archive.ics.uci.edu/static/public/352/online+retail.zip",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "archive_sha256": "f5385cbb54bbebf7196389109c6b0621faab0c304e3702548165e71c84aede8b",
+  "workbook_sha256": "43465a06f2ccf7c8b5bd2892bc7defb52f97487934fe93b16ae4c3936424676d",
+  "period": {
+    "start": "2011-11-01",
+    "end": "2011-11-30"
+  },
+  "currency": "GBP",
+  "group": "Country = United Kingdom; region, not acquisition channel",
+  "transform": "Select UK rows in November 2011; exclude C-prefixed cancellations, nonpositive quantity and price; sum Quantity*UnitPrice per InvoiceNo, round half up to 2dp per invoice; count each invoice once per day. No customer IDs or product descriptions retained. Missing calendar days are not filled in this file.",
+  "meaning": "Positive invoiced sales only; payment status unknown; excludes returns, not net revenue or verified paid GMV. Historical public data, not user business data.",
+  "counts": {
+    "source_rows": 541909,
+    "selected_source_rows": 78640,
+    "included_lines": 77475,
+    "excluded_cancellation_lines": 904,
+    "excluded_nonpositive_price_lines": 124,
+    "excluded_nonpositive_quantity_lines": 137
+  },
+  "order_count": 2490,
+  "daily_rows": 26,
+  "gold": {
+    "total_sales_gbp": "1325346.21",
+    "current_7d_sales_gbp": "277736.03",
+    "previous_7d_sales_gbp": "284447.21"
+  },
+  "files": {
+    "uci-orders-nov2011.csv": "507d7f26623c75746fe6a7621b8eb306c3c34724942a363c9d0bc4dbb3262345",
+    "uci-daily-nov2011.csv": "797642c6a338c84b261821df7ebe5ff76a3e5811bb7cf5cee5273ba518bce74c"
+  }
+}

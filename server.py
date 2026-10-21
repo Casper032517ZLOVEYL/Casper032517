@@ -4,12 +4,11 @@ import os
 import socket
 import subprocess
 import threading
-import uuid
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse
 
 from opspilot.config import ROOT, Settings, load_dotenv
-from opspilot.service import analyze_request
+from opspilot.http_api import handle_analysis
 
 load_dotenv()
 _GUARD = threading.BoundedSemaphore(4)
@@ -44,9 +43,9 @@ class Handler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == "/api/config":
-            return self.reply({"ai": self.current_settings().enabled, "version": "1.1.0", "max_rows": 20000})
+            return self.reply({"ai": self.current_settings().enabled, "version": "1.2.0", "max_rows": 20000})
         if self.path == "/api/health":
-            return self.reply({"ok": True, "version": "1.1.0"})
+            return self.reply({"ok": True, "version": "1.2.0"})
         if urlparse(self.path).path.startswith("/api/"):
             return self.reply({"ok": False, "error": "接口不存在。"}, 404)
         return super().do_GET()
@@ -73,15 +72,7 @@ class Handler(SimpleHTTPRequestHandler):
         try:
             self.connection.settimeout(30)
             payload = json.loads(self.rfile.read(length))
-            if not isinstance(payload, dict) or not isinstance(payload.get("question"), str) or not isinstance(payload.get("rows"), list):
-                raise ValueError("Invalid request")
-            if len(payload["question"]) > 500 or len(payload["rows"]) > 20000:
-                raise ValueError("Input limit exceeded")
-            channel = payload.get("channel")
-            if channel is not None and (not isinstance(channel, str) or len(channel) > 80):
-                raise ValueError("Invalid channel")
-            result = analyze_request({"rows": payload["rows"], "question": payload["question"], "channel": channel}, self.current_settings())
-            result["request_id"] = str(uuid.uuid4())
+            result = handle_analysis(payload, self.current_settings())
             return self.reply(result)
         except (ValueError, TypeError, subprocess.SubprocessError, OSError, socket.timeout):
             return self.reply({"ok": False, "error": "输入无效或处理超时，请核对数据。"}, 400)

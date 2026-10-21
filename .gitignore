@@ -9,3 +9,9 @@ runtime/
 evaluation/local-runs/
 .DS_Store
 *.log
+# Never commit business exports or credentials. Keep intentional public fixtures in dist/datasets.
+private-data/
+uploads/
+exports/
+*.db
+*.sqlite*

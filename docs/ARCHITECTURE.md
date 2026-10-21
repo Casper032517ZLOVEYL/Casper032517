@@ -2,7 +2,8 @@
 
 ```mermaid
 flowchart TD
-  U["运营问题与日渠道文件"] --> D["数据契约与完整性校验"]
+  U["运营问题与真实业务文件"] --> I["字段映射 订单汇总 质量报告"]
+  I --> D["标准日分组与完整性校验"]
   D --> P["受限语言路由和渠道范围"]
   P --> T["确定性指标工具"]
   P --> K["关键词检索口径知识"]
@@ -19,7 +20,9 @@ flowchart TD
 ## 职责边界
 
 - `dist/lib/catalog.mjs`：指标和6条口径知识。
-- `dist/lib/data.mjs`：CSV解析、字段映射、粒度和数值校验。
+- `dist/lib/importer.mjs`：真实日汇总/订单适配、状态过滤、ID去重、质量检查、可用指标。
+- `dist/import-ui.mjs`：文件解码、映射、检查与提交交互。
+- `dist/lib/data.mjs`：CSV解析与严格/可缺字段标准行校验。
 - `dist/lib/router.mjs`：有限自然语言与结构化计划白名单。
 - `dist/lib/engine.mjs`：时间窗口、渠道范围、汇总、贡献、排名和预警。
 - `dist/lib/charts.mjs`：纯SVG可视化，标签转义。
@@ -28,7 +31,9 @@ flowchart TD
 - `opspilot/config.py`：环境配置与本地.env读取。
 - `opspilot/model.py`：一次Chat Completions请求、结构化输出和引用校验。
 - `opspilot/service.py`：Node工具调用、回退、用量与费用。
-- `server.py`：仅本地HTTP服务、输入限制、来源检查和并发上限。
+- `opspilot/http_api.py`：两种HTTP入口共享的请求与模型授权校验。
+- `opspilot/wsgi.py`：Gunicorn部署入口，Basic认证、Host/来源/体积/并发限制。
+- `server.py`：仅本地HTTP开发入口。
 
 `dist/core.mjs` 是稳定导出入口；浏览器、CLI和Python服务通过同一引擎计算指标。真实业务数值不会由模型重算或覆盖。
 
@@ -38,8 +43,8 @@ flowchart TD
 
 输出：`{"hypotheses":[{"hypothesis":"…","validation":"…","evidence_ids":["K03"]}]}`。最多3条，文本长度和引用ID须通过校验；允许空数组表示依据不足。ID有效不等于语义被证明，模型假设仍需人工复核。
 
-未配置密钥时使用浏览器计算；配置后本地服务每题调用一次模型。兼容端点必须支持JSON response_format。模型超时、非法JSON、未知引用时回退工具结果。未提供Token用量或价格时费用为null，不能写成0。
+未配置密钥时使用浏览器计算；配置后仍须用户显式授权；有效数据任务至多一次模型调用。兼容端点必须支持JSON response_format。模型超时、非法JSON、未知引用时回退工具结果。未提供Token用量或价格时费用为null，不能写成0。
 
 ## 范围说明
 
-这是受控工具工作流，不是自由执行Agent。知识检索为关键词匹配，不是向量RAG。在线静态Demo没有模型密钥，真实API连接在本地配置。`docs/archive`与原SVG原型是1.0历史资料，当前设计以本目录Markdown与实际代码为准。
+这是受控工具工作流，不是自由执行Agent。知识检索为关键词匹配，不是向量RAG。在线静态Demo没有模型密钥，真实API连接在本地或受控Gunicorn服务配置。在线版默认以UCI公开交易验证，真实业务文件不进入GitHub。`docs/archive`与原SVG原型是1.0历史资料，当前设计以本目录Markdown与实际代码为准。

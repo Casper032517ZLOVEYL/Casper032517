@@ -24,7 +24,7 @@
       <div class="side-bottom">
         <div class="mode-pill" id="mode">本地计算模式</div>
         <p>每个结论，都能回到数据。</p>
-        <small>OpsPilot · MVP 1.1</small>
+        <small>OpsPilot · v1.2 · 真实数据接入</small>
       </div>
     </aside>
     <main>
@@ -39,16 +39,17 @@
         </div>
       </header>
       <div class="notice" id="notice" role="status">
-        演示数据 · 合成电商漏斗，非真实业务结果。数据仅在当前浏览器内计算。
+        公开真实交易案例 · 加载中。也可上传你自己的业务报表。
       </div>
       <section id="analysis" class="view">
         <div class="topline">
-          <span class="source" id="source">示例运营数据</span
+          <span class="source" id="source">数据源</span
           ><span class="muted" id="coverage"></span
           ><button class="link" id="choose">更换数据 ↗</button
-          ><input id="file" type="file" accept=".csv,.xlsx" hidden />
+          ><input id="file" type="file" accept=".csv,.xlsx,.tsv" hidden />
         </div>
-        <p class="muted">全渠道概览 · 最近7天</p>
+        <p class="muted">全分组概览 · 最近7天 · 仅显示实际字段支持的指标</p>
+        <p class="muted" id="available-metrics"></p>
         <div id="kpis" class="kpis"></div>
         <div class="ask-card">
           <div class="ask-label">
@@ -59,25 +60,41 @@
             <label for="channel">分析范围</label
             ><select id="channel" aria-label="分析渠道">
               <option value="">全部渠道</option></select
-            ><span class="muted">最近 N 天以数据最后一天为准</span>
+            ><span class="muted">分组可为渠道、门店或地区</span>
+          </div>
+          <div class="scope-controls date-controls">
+            <label for="date-mode">时间范围</label
+            ><select id="date-mode">
+              <option value="latest">最近N天（数据最后一天）</option>
+              <option value="custom">自选日期（1–90天）</option>
+            </select>
+            <label for="range-start">开始</label
+            ><input type="date" id="range-start" disabled />
+            <label for="range-end">结束</label
+            ><input type="date" id="range-end" disabled />
           </div>
           <form id="ask-form">
             <label class="sr-only" for="question">你的运营问题</label
             ><input
               id="question"
               maxlength="500"
-              value="最近7天 GMV 为什么下降？"
-              placeholder="例如：最近7天 GMV 为什么下降？"
-            /><button id="submit" type="submit">
-              开始分析 <span>↗</span>
-            </button>
+              value="销售金额为什么下降？"
+              placeholder="例如：销售金额为什么下降？"
+            /><button id="submit" type="submit">开始分析 <span>↗</span></button>
           </form>
           <div class="examples">
-            <button data-q="最近7天 GMV 为什么下降？">GMV 变化归因</button
+            <button data-q="销售金额为什么下降？">销售变化分解</button
             ><button data-q="哪个渠道注册转化率最高？">渠道转化排名</button
-            ><button data-q="最近14天 GMV 趋势">每日 GMV 趋势</button
+            ><button data-q="销售金额趋势">每日销售趋势</button
             ><button data-q="ROAS 是什么？">查询指标口径</button>
           </div>
+          <label class="check model-consent"
+            ><input
+              type="checkbox"
+              id="use-ai"
+              disabled
+            />允许将问题、分组和聚合证据发送给我配置的模型（本地服务配置后可启用；原始订单和文件名不会发送）</label
+          >
         </div>
         <div id="error" class="error" role="alert" hidden></div>
         <div id="result">
@@ -186,8 +203,8 @@
         <article class="card">
           <h2>先确认口径，再开始分析</h2>
           <p>
-            每行是一天、一个渠道的汇总。本版支持同一业务漏斗，曝光 ≥ 点击 ≥ 注册
-            ≥ 订单。转化率始终按总分子 / 总分母计算。
+            可导入日汇总或一行一单的订单明细。先确认字段、日期、币种和金额口径，再检查、导入。缺少成本时不能算ROAS；不同来源的订单和注册不强制组成漏斗。比率按总分子
+            / 总分母计算。
           </p>
           <div class="row">
             <button id="upload2">上传 CSV / Excel</button
@@ -195,9 +212,8 @@
             ><button class="outline" id="reset">恢复示例</button>
           </div>
           <p class="muted">
-            上限 5 MB / 20,000 行 / 20 个渠道。Excel
-            读取第一个工作表，仅接收数值和文本；公式须先粘贴为值。日期用
-            YYYY-MM-DD。
+            上限 5 MB / 20,000行 /
+            20个分组。CSV支持UTF-8、GB18030和分隔符选择；Excel读取首表，公式请先粘贴为值，数字日期选择Excel序号。未映射的个人信息不进入分析结果。默认不自动补零或合并重复数据。
           </p>
           <div class="table-wrap">
             <table>
@@ -211,6 +227,33 @@
               <tbody id="schema"></tbody>
             </table>
           </div>
+          <h3>最近一次导入检查</h3>
+          <pre id="import-report">加载中</pre>
+          <div class="row">
+            <button class="outline" id="download-quality">
+              下载质量报告 JSON</button
+            ><button class="outline" id="download-normalized">
+              下载分析数据 CSV</button
+            ><button class="outline" id="real-case">
+              加载公开真实交易案例
+            </button>
+          </div>
+          <p class="muted">
+            公开案例来源：<a
+              href="https://archive.ics.uci.edu/dataset/352/online+retail"
+              target="_blank"
+              rel="noreferrer"
+              >UCI Online Retail，Chen (2015)，CC BY 4.0</a
+            >。英国地区2011年11月正向发票销售；不包含支付状态，不等于净收入。按全量交易覆盖期补齐无交易日。<a
+              href="datasets/uci-manifest.json"
+              target="_blank"
+              >转换与校验记录</a
+            >
+            ·
+            <a href="datasets/uci-orders-nov2011.csv" download
+              >下载真实订单汇总</a
+            >。
+          </p>
           <div class="table-wrap"><table id="preview"></table></div>
         </article>
       </section>
@@ -221,7 +264,7 @@
             <span class="pill">真实运行记录</span>
           </div>
           <p>
-            以下为132项合成数据上的确定性工具与路由回归测试。另有24项新增分析/导出测试及27项后端/模拟API测试。不能解释为开放问题准确率、大模型幻觉率或真实用户效果。
+            以下为132项历史合成数据的确定性回归摘要；仓库另含真实公开数据的独立金额核对、导入边界与后端测试。不能解释为开放问题准确率、大模型幻觉率或真实用户效果。
           </p>
           <div id="eval-kpis" class="kpis"></div>
           <div id="eval-info"></div>
@@ -264,13 +307,13 @@
           </p>
           <h3>已知边界</h3>
           <p>
-            不支持同比、预测、留存、用户级去重、跨月指定时间、自动因果识别。日期缺失、重复粒度或漏斗口径不符时阻止分析。建议用于个人作品演示，不包含多人权限与企业数据治理。
+            支持自选日期和一行一单的订单汇总。商品行明细需先按订单汇总；不支持混币种、净退款计算、同比、预测、留存或自动因果识别。适合单人本地业务试用，企业多人部署仍需认证、审计和数据治理。
           </p>
           <h3>三分钟演示顺序</h3>
           <ol>
-            <li>说明用户痛点与合成示例数据。</li>
+            <li>加载公开真实交易案例，说明GBP、地区维度与正向销售口径。</li>
             <li>提问 GMV 下降，核对前后窗口及渠道贡献。</li>
-            <li>改问转化率排名，展示加权计算与口径引用。</li>
+            <li>上传自己的报表，确认字段映射，导出质量报告并核查销售结果。</li>
             <li>输入“预测明天 GMV”，演示能力边界。</li>
             <li>打开评测中心，解释哪些效果已经验证，哪些仍待测。</li>
           </ol>
@@ -278,6 +321,125 @@
       </section>
       <footer>OpsPilot / 以数据为依据，以实验验证建议。</footer>
     </main>
+    <dialog id="import-dialog" aria-labelledby="import-title">
+      <div class="row">
+        <h2 id="import-title">接入你的业务数据</h2>
+        <button class="outline" id="import-cancel">取消</button>
+      </div>
+      <p id="import-rows" class="muted"></p>
+      <div class="form-grid">
+        <label
+          >CSV编码<select id="import-encoding">
+            <option value="utf-8">UTF-8</option>
+            <option value="gb18030">GB18030 / GBK</option>
+          </select></label
+        >
+        <label
+          >CSV分隔符<select id="import-delimiter">
+            <option value=",">逗号</option>
+            <option value="&#9;">Tab</option>
+            <option value=";">分号</option>
+          </select></label
+        >
+      </div>
+      <div id="import-options" class="form-grid">
+        <label
+          >数据粒度<select id="import-mode">
+            <option value="daily">日 × 分组汇总</option>
+            <option value="orders">订单明细（一行一单）</option>
+          </select></label
+        >
+        <label
+          >日期格式<select id="import-date">
+            <option value="YMD">年-月-日（可含本地时间）</option>
+            <option value="DMY">日/月/年</option>
+            <option value="MDY">月/日/年</option>
+            <option value="EXCEL">Excel 1900日期序号</option>
+          </select></label
+        >
+        <label
+          >金额币种<select id="import-currency">
+            <option>CNY</option>
+            <option>GBP</option>
+            <option>USD</option>
+            <option>EUR</option>
+            <option>JPY</option>
+            <option>HKD</option>
+          </select></label
+        >
+        <label
+          >金额口径<select id="import-basis">
+            <option value="gross">正向销售额（不代表已支付）</option>
+            <option value="paid">已支付订单金额（由我确认）</option>
+          </select></label
+        >
+        <label
+          >日汇总重复处理<select id="import-duplicates">
+            <option value="reject">阻止，先核查</option>
+            <option value="sum">确认是可加的子维度，按日汇总</option>
+          </select></label
+        >
+        <label
+          >纳入的订单状态<input
+            id="import-statuses"
+            placeholder="如：已支付,交易成功；映射状态才生效"
+        /></label>
+        <label
+          >完整覆盖期开始（可选）<input id="import-start" type="date" /></label
+        ><label
+          >完整覆盖期结束（可选）<input id="import-end" type="date"
+        /></label>
+        <label class="check"
+          ><input
+            id="import-complete"
+            type="checkbox"
+          />订单明细为完整导出，一行一单，状态和币种已核对</label
+        >
+        <label class="check"
+          ><input
+            id="import-zero"
+            type="checkbox"
+          />确认覆盖期与所有分组完整，缺失日确实无业务，可补零</label
+        >
+        <label class="check"
+          ><input
+            id="import-funnel"
+            type="checkbox"
+          />这些指标属于同一漏斗，校验曝光≥点击≥注册≥订单</label
+        >
+        <label class="check"
+          ><input
+            id="import-thousands"
+            type="checkbox"
+          />允许标准千位分隔符，如1,234.50</label
+        >
+      </div>
+      <h3>字段映射</h3>
+      <div class="form-grid" id="import-mapping"></div>
+      <div class="row">
+        <button id="import-check">1. 检查数据</button
+        ><button class="outline" id="import-issues" disabled>
+          导出问题清单</button
+        ><button id="import-commit" disabled>2. 确认导入</button>
+      </div>
+      <pre id="import-quality" role="status"></pre>
+      <p class="muted">
+        先检查再确认；检查失败不会替换当前数据。订单ID只用于导入去重，未映射列会丢弃。金额最多2位小数，带时区时间须预先转为业务本地时间。
+      </p>
+    </dialog>
+    <dialog id="report-dialog" aria-labelledby="report-heading">
+      <div class="row">
+        <h2 id="report-heading">核对并导出分析报告</h2>
+        <button class="outline" id="report-close">关闭</button>
+      </div>
+      <label for="report-content">报告内容（Markdown，可直接复制）</label>
+      <textarea id="report-content" readonly></textarea>
+      <div class="row">
+        <button id="report-download">保存 Markdown</button
+        ><button class="outline" id="report-copy">复制报告</button>
+      </div>
+      <p id="report-status" class="muted" role="status"></p>
+    </dialog>
     <script type="module" src="app.mjs"></script>
   </body>
 </html>

@@ -1,13 +1,13 @@
 /** Business definitions shared by the browser and Node tool runtime. */
 export const METRICS = Object.freeze({
-  revenue: { name: "GMV", unit: "元", a: "revenue" },
+  revenue: { name: "销售金额", unit: "货币", a: "revenue" },
   orders: { name: "订单量", unit: "单", a: "orders" },
   registrations: { name: "注册量", unit: "人次", a: "registrations" },
-  cost: { name: "投放成本", unit: "元", a: "cost" },
+  cost: { name: "投放成本", unit: "货币", a: "cost" },
   ctr: { name: "点击率", unit: "%", a: "clicks", b: "impressions" },
   cvr: { name: "注册转化率", unit: "%", a: "registrations", b: "clicks" },
   roas: { name: "ROAS", unit: "倍", a: "revenue", b: "cost" },
-  aov: { name: "客单价", unit: "元", a: "revenue", b: "orders" },
+  aov: { name: "客单价", unit: "货币", a: "revenue", b: "orders" },
 });
 
 export const COLUMNS = Object.freeze([
@@ -32,7 +32,7 @@ export const KNOWLEDGE = Object.freeze([
     id: "K02",
     title: "GMV 与收入",
     keys: ["gmv", "收入", "销售", "金额", "营收"],
-    text: "本项目将 revenue 定义为已支付订单金额（GMV，人民币），不是扣退款后的净收入。若实际字段口径不同，先确认口径再导入。",
+    text: "revenue 是用户导入的销售金额，须确认是正向销售金额还是已支付金额，并使用单一币种。未处理退款时不能称作净收入，也不能仅凭销售记录认定支付完成。",
   },
   {
     id: "K03",

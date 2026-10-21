@@ -8,7 +8,9 @@ import {
   narrative,
   METRICS,
 } from "./core.mjs";
-import { readXlsx } from "./xlsx.mjs";
+import { mountImporter } from "./import-ui.mjs";
+import { prepareImport, metricAvailability } from "./lib/importer.mjs";
+import { route } from "./core.mjs";
 const $ = (s) => document.querySelector(s),
   esc = (s) =>
     String(s ?? "").replace(
@@ -24,7 +26,9 @@ const $ = (s) => document.querySelector(s),
     );
 let rows = [],
   result = null,
-  filename = "示例运营数据 · 合成",
+  filename = "UCI Online Retail · 公开真实交易",
+  dataset = null,
+  quality = null,
   localAI = false,
   lastQuestion = "",
   feedback = [];
@@ -34,14 +38,47 @@ try {
   feedback = feedback.slice(-200);
 } catch {}
 const sampleText = await fetch("sample.csv").then((r) => r.text());
-rows = normalize(parseCSV(sampleText));
+async function loadRealCase() {
+  const text = await fetch("datasets/uci-daily-nov2011.csv").then((r) => {
+    if (!r.ok) throw Error("公开案例读取失败");
+    return r.text();
+  });
+  const imported = prepareImport(parseCSV(text), {
+    mode: "daily",
+    mapping: {
+      date: "date",
+      channel: "channel",
+      orders: "orders",
+      revenue: "revenue",
+    },
+    currency: "GBP",
+    revenueBasis: "gross",
+    fillZeros: true,
+    coverageStart: "2011-11-01",
+    coverageEnd: "2011-11-30",
+  });
+  if (!imported.ok) throw Error(imported.error);
+  rows = imported.rows;
+  dataset = imported.metadata;
+  quality = imported.report;
+  filename = "UCI Online Retail · 英国地区 · 公开真实交易";
+}
+try {
+  await loadRealCase();
+} catch (e) {
+  rows = normalize(parseCSV(sampleText));
+  filename = "合成示例（公开案例未能加载）";
+}
 function download(name, text, type = "application/json") {
   let url = URL.createObjectURL(new Blob([text], { type })),
     a = document.createElement("a");
   a.href = url;
   a.download = name;
+  a.hidden = true;
+  document.body.append(a);
   a.click();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
 function view(name) {
   document.querySelectorAll(".view").forEach((e) => (e.hidden = e.id !== name));
@@ -65,16 +102,39 @@ function refresh() {
   $("#source").textContent = filename;
   const selected = $("#channel").value;
   $("#channel").innerHTML =
-    '<option value="">全部渠道</option>' +
+    '<option value="">全部分组</option>' +
     [...new Set(rows.map((r) => r.channel))]
       .map((c) => `<option value="${esc(c)}">${esc(c)}</option>`)
       .join("");
   if ([...new Set(rows.map((r) => r.channel))].includes(selected))
     $("#channel").value = selected;
-  $("#kpis").innerHTML = ["revenue", "orders", "cvr", "roas"]
+  const available = metricAvailability(rows);
+  $("#available-metrics").textContent =
+    "可分析：" +
+    Object.keys(available)
+      .filter((m) => available[m].available)
+      .map((m) => METRICS[m].name)
+      .join(" / ") +
+    "。未提供的字段不会补成零。";
+  $("#import-report").textContent = quality
+    ? JSON.stringify({ source: filename, ...quality, dataset }, null, 2)
+    : "合成示例，非业务数据。";
+  document.querySelectorAll("[data-q]").forEach((b) => {
+    const p = route(b.dataset.q);
+    b.disabled = !!(
+      p.metric &&
+      p.intent !== "definition" &&
+      !available[p.metric]?.available
+    );
+    b.title = b.disabled ? "源数据缺少该指标的必要字段" : "";
+  });
+  const cards = Object.keys(available)
+    .filter((m) => available[m].available)
+    .slice(0, 4);
+  $("#kpis").innerHTML = cards
     .map((m) => {
-      let r = analyze(rows, `最近7天 ${METRICS[m].name}`);
-      return `<div class="kpi"><div class="kpi-label">${METRICS[m].name} <span class="muted">/ 最近7天</span></div><div class="kpi-value">${r.ok ? format(r.current, m) : "—"}</div><div class="change ${r.relative < 0 ? "negative" : "positive"}">${r.ok ? (r.relative == null ? "暂无可比基期" : `${r.relative < 0 ? "↓" : "↑"} ${Math.abs(r.relative * 100).toFixed(2)}%　较前7天`) : "数据不足或缺失"}</div></div>`;
+      let r = analyze(rows, `最近7天 ${METRICS[m].name}`, null, { dataset });
+      return `<div class="kpi"><div class="kpi-label">${METRICS[m].name} <span class="muted">/ 最近7天</span></div><div class="kpi-value">${r.ok ? format(r.current, m, dataset?.currency) : "—"}</div><div class="change ${r.relative < 0 ? "negative" : "positive"}">${r.ok ? (r.relative == null ? "暂无可比基期" : `${r.relative < 0 ? "↓" : "↑"} ${Math.abs(r.relative * 100).toFixed(2)}%　较前7天`) : "数据不足或缺失"}</div></div>`;
     })
     .join("");
   let keys = Object.keys(rows[0]);
@@ -105,7 +165,7 @@ function render(r) {
   $("#result .bottom-grid article:first-child").hidden = !!r.definition;
   $("#caveat").hidden = !!r.definition;
   $("#trace").textContent =
-    `${r.plan.channel || "全部渠道"} · ${r.ai ? "AI 假设 + " : ""}数据计算 ${Number(r.latency_ms ?? 0).toFixed(1)} ms`;
+    `${r.plan.channel || "全部分组"} · ${r.ai ? "AI 假设 + " : ""}数据计算 ${Number(r.latency_ms ?? 0).toFixed(1)} ms`;
   $("#alert-state").hidden = r.anomaly !== true;
   $("#usage").hidden = !r.total_latency_ms;
   if (r.total_latency_ms)
@@ -141,7 +201,8 @@ function render(r) {
     : r.plan.intent === "ranking"
       ? "渠道对比"
       : "每日趋势";
-  $("#chart-unit").textContent = METRICS[m].unit;
+  $("#chart-unit").textContent =
+    METRICS[m].unit === "货币" ? r.currency : METRICS[m].unit;
   $("#chart-caption").textContent = r.range
     ? `${r.range.begin} — ${r.range.end}`
     : "不需要运行数据计算";
@@ -163,7 +224,9 @@ function render(r) {
     v === null
       ? "不可计算"
       : (v > 0 ? "+" : "") +
-        (METRICS[m].unit === "%" ? (v * 100).toFixed(2) + " pp" : format(v, m));
+        (METRICS[m].unit === "%"
+          ? (v * 100).toFixed(2) + " pp"
+          : format(v, m, r.currency));
   $("#contribution").innerHTML =
     r.plan.intent === "compare"
       ? ds
@@ -185,18 +248,23 @@ function render(r) {
   )
     .map(
       (d) =>
-        `<tr><td>${esc(d.channel)}</td><td>${format(d.current, m)}</td><td>${r.plan.intent === "compare" ? format(d.previous, m) : "—"}</td><td>${r.plan.intent === "compare" ? cont(d.contribution) : "—"}</td></tr>`,
+        `<tr><td>${esc(d.channel)}</td><td>${format(d.current, m, r.currency)}</td><td>${r.plan.intent === "compare" ? format(d.previous, m, r.currency) : "—"}</td><td>${r.plan.intent === "compare" ? cont(d.contribution) : "—"}</td></tr>`,
     )
     .join("");
-  $("#suggestion").textContent = r.plan.intent === "compare" && ds[0]
-    ? `补充 ${ds[0].channel} 的活动与用户行为数据`
-    : "按业务目标选择渠道，补充活动与用户行为数据";
+  $("#suggestion").textContent =
+    r.plan.intent === "compare" && ds[0]
+      ? `补充 ${ds[0].channel} 的活动与用户行为数据`
+      : "按业务目标选择渠道，补充活动与用户行为数据";
 }
 let active = 0;
 async function run() {
   const ticket = ++active;
   lastQuestion = $("#question").value;
   const selectedChannel = $("#channel").value;
+  const range =
+    $("#date-mode").value === "custom"
+      ? { start: $("#range-start").value, end: $("#range-end").value }
+      : null;
   result = null;
   $("#export").disabled = true;
   $("#export-json").disabled = true;
@@ -207,7 +275,7 @@ async function run() {
   $("#submit").textContent = "分析中…";
   try {
     let r;
-    if (localAI) {
+    if (localAI && $("#use-ai").checked) {
       let response = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -215,6 +283,9 @@ async function run() {
           rows,
           question: lastQuestion,
           channel: selectedChannel || null,
+          dataset,
+          range,
+          use_model: true,
         }),
       });
       r = await response.json();
@@ -222,6 +293,8 @@ async function run() {
     } else
       r = analyze(rows, lastQuestion, null, {
         channel: selectedChannel || null,
+        dataset,
+        range,
       });
     if (ticket === active) {
       result = r;
@@ -237,9 +310,14 @@ async function run() {
       $("#submit").disabled = false;
       $("#submit").textContent = "开始分析 ↗";
       $("#channel").disabled = false;
-      document
-        .querySelectorAll("[data-q]")
-        .forEach((b) => (b.disabled = false));
+      document.querySelectorAll("[data-q]").forEach((b) => {
+        const p = route(b.dataset.q);
+        b.disabled = !!(
+          p.metric &&
+          p.intent !== "definition" &&
+          !metricAvailability(rows)[p.metric]?.available
+        );
+      });
       $("#export").disabled = !result?.ok;
       $("#export-json").disabled = !result?.ok;
       $("#channel-csv").disabled = !result?.details;
@@ -258,37 +336,88 @@ document.querySelectorAll("[data-q]").forEach(
     }),
 );
 $("#choose").onclick = $("#upload2").onclick = () => $("#file").click();
-$("#file").onchange = async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
+async function installImport(imported) {
+  ++active;
+  rows = imported.rows;
+  dataset = imported.metadata;
+  quality = imported.report;
+  filename = imported.source;
+  $("#channel").value = "";
+  $("#date-mode").value = "latest";
+  $("#range-start").disabled = $("#range-end").disabled = true;
+  $("#notice").textContent =
+    localAI && $("#use-ai").checked
+      ? "已接入你的业务数据。分析会把日×分组汇总发送到本地服务，AI仅接收聚合证据。"
+      : "已接入你的业务数据。计算在当前浏览器完成，刷新清除；报告由你手动下载。";
+  const available = metricAvailability(rows);
+  const m = Object.keys(available).find((m) => available[m].available);
+  $("#question").value = `${METRICS[m].name}趋势`;
+  refresh();
+  view("analysis");
+  await run();
+}
+mountImporter({ onCommit: installImport, download });
+$("#date-mode").onchange = () => {
+  const custom = $("#date-mode").value === "custom";
+  $("#range-start").disabled = $("#range-end").disabled = !custom;
+  if (custom && !$("#range-end").value) {
+    $("#range-end").value = rows.at(-1).date;
+    $("#range-start").value = new Date(
+      Date.parse(rows.at(-1).date) - 6 * 86400000,
+    )
+      .toISOString()
+      .slice(0, 10);
+  }
+};
+$("#download-quality").onclick = () =>
+  download(
+    "opspilot_data_quality.json",
+    JSON.stringify({ source: filename, dataset, report: quality }, null, 2),
+  );
+$("#download-normalized").onclick = () => {
+  const fields = [
+    "date",
+    "channel",
+    ...Object.keys(rows[0]).filter(
+      (f) =>
+        !["date", "channel"].includes(f) && rows.some((r) => r[f] !== null),
+    ),
+  ];
+  const q = (v) =>
+    '"' +
+    (typeof v === "string" && /^[\s]*[=+@-]/.test(v) ? "'" : "") +
+    String(v ?? "").replaceAll('"', '""') +
+    '"';
+  download(
+    "opspilot_normalized.csv",
+    "\uFEFF" +
+      [fields, ...rows.map((r) => fields.map((f) => r[f]))]
+        .map((r) => r.map(q).join(","))
+        .join("\r\n"),
+    "text/csv;charset=utf-8",
+  );
+};
+$("#real-case").onclick = async () => {
   try {
-    if (!/\.(csv|xlsx)$/i.test(file.name))
-      throw Error("仅支持 .csv 和 .xlsx 文件");
-    if (file.size > 5 * 1024 * 1024) throw Error("文件超过 5 MB");
-    const parsed = file.name.toLowerCase().endsWith(".xlsx")
-      ? await readXlsx(await file.arrayBuffer())
-      : parseCSV(await file.text());
-    rows = normalize(parsed);
-    filename = file.name;
-    $("#channel").value = "";
-    $("#notice").textContent = localAI
-      ? "已加载你的数据。AI 模式会将渠道聚合概况、问题与计算证据发送到配置的模型服务。"
-      : "已加载你的数据。数据仅在当前浏览器内计算，刷新后清除。";
-    refresh();
-    view("analysis");
-    await run();
+    await loadRealCase();
+    await installImport({
+      rows,
+      metadata: dataset,
+      report: quality,
+      source: filename,
+    });
+    $("#notice").textContent =
+      "公开真实交易 · 英国地区2011年11月 · GBP · 正向发票销售，支付状态未知。按全量覆盖期补齐4个无交易日。";
   } catch (e) {
-    $("#error").hidden = false;
-    $("#error").textContent = "导入未完成：" + e.message;
-    view("analysis");
-  } finally {
-    $("#file").value = "";
+    $("#notice").textContent = e.message;
   }
 };
 $("#sample").onclick = () =>
   download("opspilot_sample.csv", sampleText, "text/csv;charset=utf-8");
 $("#reset").onclick = () => {
   rows = normalize(parseCSV(sampleText));
+  dataset = null;
+  quality = null;
   filename = "示例运营数据 · 合成";
   $("#channel").value = "";
   $("#notice").textContent = "演示数据 · 合成电商漏斗，非真实业务结果。";
@@ -316,12 +445,36 @@ $("#export-json").onclick = () => {
   );
 };
 $("#export").onclick = () => {
-  if (result?.ok)
-    download(
-      "opspilot_report.md",
-      markdownReport({ source: filename, question: lastQuestion, result }),
-      "text/markdown;charset=utf-8",
-    );
+  if (!result?.ok) return;
+  $("#report-content").value = markdownReport({
+    source: filename,
+    question: lastQuestion,
+    result,
+  });
+  $("#report-status").textContent =
+    "可先核对内容，再保存。浏览器限制下载时，可复制内容保存为.md。";
+  $("#report-dialog").showModal();
+};
+$("#report-close").onclick = () => $("#report-dialog").close();
+$("#report-download").onclick = () => {
+  download(
+    "opspilot_report.md",
+    $("#report-content").value,
+    "text/markdown;charset=utf-8",
+  );
+  $("#report-status").textContent =
+    "已请求浏览器保存文件；若未开始下载，可复制报告内容。";
+};
+$("#report-copy").onclick = async () => {
+  try {
+    await navigator.clipboard.writeText($("#report-content").value);
+    $("#report-status").textContent = "报告已复制。";
+  } catch {
+    $("#report-content").focus();
+    $("#report-content").select();
+    $("#report-status").textContent =
+      "请按Ctrl+C（Mac按Command+C）复制已选内容。";
+  }
 };
 $("#channel-csv").onclick = () => {
   if (result?.details)
@@ -356,14 +509,22 @@ document.querySelectorAll("[data-feedback]").forEach(
 $("#feedback-export").onclick = () =>
   download("opspilot_feedback.json", JSON.stringify(feedback, null, 2));
 $("#schema").innerHTML = [
-  ["date / 日期", "自然日", "YYYY-MM-DD"],
-  ["channel / 渠道", "渠道名称", "与日期组成唯一键"],
-  ["impressions / 曝光量", "漏斗曝光次数", "非负整数"],
-  ["clicks / 点击量", "漏斗点击次数", "不超过曝光量"],
-  ["registrations / 注册量", "由点击转化的注册量", "不超过点击量"],
-  ["orders / 订单量", "同口径漏斗成交订单", "不超过注册量"],
-  ["revenue / 付费金额", "已支付订单金额，人民币", "非负数，不含净收入定义"],
-  ["cost / 投放成本", "同渠道投放成本，人民币", "非负数"],
+  ["date / 日期", "自然日或业务时间", "必需；选择YMD/DMY/MDY/Excel序号"],
+  ["channel / 渠道", "渠道、门店或地区", "可选；缺省为全部业务"],
+  ["impressions / 曝光量", "漏斗曝光次数", "可选；非负整数"],
+  ["clicks / 点击量", "漏斗点击次数", "可选；同口径漏斗才校验"],
+  [
+    "registrations / 注册量",
+    "由点击转化的注册量",
+    "可选；未提供不能算注册转化",
+  ],
+  ["orders / 订单量", "同口径漏斗成交订单", "日汇总可选；订单明细按唯一ID计数"],
+  [
+    "revenue / 付费金额",
+    "所选单一币种的销售金额",
+    "选择正向销售或已支付口径；不等于净收入",
+  ],
+  ["cost / 投放成本", "同分组投放成本，所选币种", "可选；缺失不能算ROAS"],
 ]
   .map((r) => "<tr>" + r.map((x) => "<td>" + x + "</td>").join("") + "</tr>")
   .join("");
@@ -391,16 +552,25 @@ try {
 } catch {
   $("#eval-info").textContent = "评测记录尚未加载。";
 }
-if (["localhost", "127.0.0.1", "terminal.local"].includes(location.hostname)) {
+{
   try {
     let c = await fetch("/api/config").then((r) => r.json());
     localAI = c.ai;
     if (localAI) {
+      $("#use-ai").disabled = false;
       $("#mode").textContent = "AI + 数据工具";
       $("#notice").textContent =
-        "本地 AI 模式 · 问题、渠道概况和计算证据会发送到配置的模型服务。示例数据为合成。";
+        "模型已配置，默认未启用。勾选授权后才发送聚合证据。";
     }
   } catch {}
 }
+if (dataset)
+  $("#notice").textContent =
+    "公开真实交易 · 英国地区2011年11月 · GBP · 正向发票销售，支付状态未知。按全量覆盖期补齐4个无交易日。数据在当前浏览器计算。";
+$("#use-ai").onchange = () => {
+  $("#notice").textContent = $("#use-ai").checked
+    ? "AI已启用：问题、分组和聚合结果将发送到你配置的模型端点。请确认有权分享这些业务信息。"
+    : "AI未启用；数据只在当前浏览器计算。";
+};
 refresh();
 await run();
