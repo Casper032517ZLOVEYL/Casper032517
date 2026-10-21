@@ -1,0 +1,12 @@
+{
+  "case": "weighted conversion aggregation",
+  "baseline_name": "Naive unweighted channel mean",
+  "before": 0.15000000000000002,
+  "after": 0.1,
+  "delta": -0.05000000000000002,
+  "correct_before": 0.11666666666666667,
+  "correct_after": 0.1,
+  "correct_delta": -0.016666666666666663,
+  "unit": "ratio; multiply by100 for percentage points",
+  "note": "Engine correctness illustration; not measured LLM improvement"
+}

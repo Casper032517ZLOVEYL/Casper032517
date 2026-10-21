@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#111a2d" />
+    <title>OpsPilot · 运营分析工作台</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <aside>
+      <a class="brand" href="#"
+        ><span class="logo">O<span>↗</span></span
+        ><b>OpsPilot<small>运营分析工作台</small></b></a
+      >
+      <div class="nav-label">WORKSPACE</div>
+      <nav>
+        <button class="active" data-view="analysis">
+          ◫ <span>分析工作台</span></button
+        ><button data-view="data">▤ <span>数据与口径</span></button
+        ><button data-view="evaluation">◎ <span>评测中心</span></button
+        ><button data-view="guide">◇ <span>项目说明</span></button>
+      </nav>
+      <div class="side-bottom">
+        <div class="mode-pill" id="mode">本地计算模式</div>
+        <p>每个结论，都能回到数据。</p>
+        <small>OpsPilot · MVP 1.1</small>
+      </div>
+    </aside>
+    <main>
+      <header>
+        <div>
+          <span class="eyebrow">OPERATIONS / COPILOT</span>
+          <h1 id="page-title">让运营判断有据可依</h1>
+        </div>
+        <div class="export-actions">
+          <button class="outline" id="export-json">导出 JSON</button
+          ><button id="export">↓ 导出报告</button>
+        </div>
+      </header>
+      <div class="notice" id="notice" role="status">
+        演示数据 · 合成电商漏斗，非真实业务结果。数据仅在当前浏览器内计算。
+      </div>
+      <section id="analysis" class="view">
+        <div class="topline">
+          <span class="source" id="source">示例运营数据</span
+          ><span class="muted" id="coverage"></span
+          ><button class="link" id="choose">更换数据 ↗</button
+          ><input id="file" type="file" accept=".csv,.xlsx" hidden />
+        </div>
+        <p class="muted">全渠道概览 · 最近7天</p>
+        <div id="kpis" class="kpis"></div>
+        <div class="ask-card">
+          <div class="ask-label">
+            <span class="spark">✦</span> 从一个业务问题开始
+            <span class="pill">证据优先</span>
+          </div>
+          <div class="scope-controls">
+            <label for="channel">分析范围</label
+            ><select id="channel" aria-label="分析渠道">
+              <option value="">全部渠道</option></select
+            ><span class="muted">最近 N 天以数据最后一天为准</span>
+          </div>
+          <form id="ask-form">
+            <label class="sr-only" for="question">你的运营问题</label
+            ><input
+              id="question"
+              maxlength="500"
+              value="最近7天 GMV 为什么下降？"
+              placeholder="例如：最近7天 GMV 为什么下降？"
+            /><button id="submit" type="submit">
+              开始分析 <span>↗</span>
+            </button>
+          </form>
+          <div class="examples">
+            <button data-q="最近7天 GMV 为什么下降？">GMV 变化归因</button
+            ><button data-q="哪个渠道注册转化率最高？">渠道转化排名</button
+            ><button data-q="最近14天 GMV 趋势">每日 GMV 趋势</button
+            ><button data-q="ROAS 是什么？">查询指标口径</button>
+          </div>
+        </div>
+        <div id="error" class="error" role="alert" hidden></div>
+        <div id="result">
+          <div class="result-head">
+            <h2>
+              分析结果
+              <span id="alert-state" class="warning-pill" hidden
+                >变化达到 10% 预警阈值</span
+              >
+            </h2>
+            <span id="trace" class="muted"></span>
+          </div>
+          <div class="analysis-grid">
+            <article class="card conclusion">
+              <div class="section-label">01 / 核心发现</div>
+              <h3 id="result-title"></h3>
+              <p id="summary"></p>
+              <div id="contribution"></div>
+              <div id="caveat" class="caveat">
+                渠道贡献描述变化来源，不代表已经证明因果关系。
+              </div>
+              <div id="ai-note" hidden></div>
+            </article>
+            <article class="card chart-card">
+              <div class="chart-heading">
+                <div>
+                  <div class="section-label">02 / 数据证据</div>
+                  <h3 id="chart-title">指标趋势</h3>
+                </div>
+                <span id="chart-unit" class="muted"></span>
+              </div>
+              <div id="chart"></div>
+              <div id="chart-caption" class="muted"></div>
+            </article>
+          </div>
+          <article class="card details">
+            <div class="row">
+              <h3>渠道明细</h3>
+              <button class="link" id="channel-csv">下载明细 CSV</button
+              ><span class="muted" id="formula"></span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>渠道</th>
+                    <th>本期</th>
+                    <th>前期</th>
+                    <th>对整体变化的贡献</th>
+                  </tr>
+                </thead>
+                <tbody id="details"></tbody>
+              </table>
+            </div>
+          </article>
+          <div class="bottom-grid">
+            <article class="card">
+              <div class="row">
+                <h3>下一步行动</h3>
+                <span class="pill">待验证假设</span>
+              </div>
+              <div class="action">
+                <b>P0</b>
+                <div>
+                  <strong>核查数据完整性与指标口径</strong>
+                  <p>确认埋点、订单去重及退款口径，排除统计变化。</p>
+                </div>
+              </div>
+              <div class="action">
+                <b>P1</b>
+                <div>
+                  <strong id="suggestion">进一步检查变化最大的渠道</strong>
+                  <p>补充落地页、活动与客群数据；以对照实验验证假设。</p>
+                </div>
+              </div>
+              <div class="action">
+                <b>P2</b>
+                <div>
+                  <strong>记录实验与护栏指标</strong>
+                  <p>跟踪转化、获客成本与退款，达到预设样本量后复盘。</p>
+                </div>
+              </div>
+            </article>
+            <article class="card">
+              <h3>引用与计算记录</h3>
+              <div id="knowledge"></div>
+              <details>
+                <summary>查看结构化分析计划</summary>
+                <pre id="plan"></pre>
+                <p class="muted" id="usage" hidden></p>
+              </details>
+              <div class="feedback">
+                <span>这次分析有帮助吗？</span
+                ><button data-feedback="helpful">有帮助</button
+                ><button data-feedback="needs_work">需改进</button
+                ><button class="link" id="feedback-export">导出反馈</button>
+              </div>
+              <small id="feedback-status" class="muted"
+                >反馈保存在此浏览器，不会自动上传。</small
+              >
+            </article>
+          </div>
+        </div>
+      </section>
+      <section id="data" class="view" hidden>
+        <article class="card">
+          <h2>先确认口径，再开始分析</h2>
+          <p>
+            每行是一天、一个渠道的汇总。本版支持同一业务漏斗，曝光 ≥ 点击 ≥ 注册
+            ≥ 订单。转化率始终按总分子 / 总分母计算。
+          </p>
+          <div class="row">
+            <button id="upload2">上传 CSV / Excel</button
+            ><button class="outline" id="sample">下载示例 CSV</button
+            ><button class="outline" id="reset">恢复示例</button>
+          </div>
+          <p class="muted">
+            上限 5 MB / 20,000 行 / 20 个渠道。Excel
+            读取第一个工作表，仅接收数值和文本；公式须先粘贴为值。日期用
+            YYYY-MM-DD。
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>字段</th>
+                  <th>含义</th>
+                  <th>要求</th>
+                </tr>
+              </thead>
+              <tbody id="schema"></tbody>
+            </table>
+          </div>
+          <div class="table-wrap"><table id="preview"></table></div>
+        </article>
+      </section>
+      <section id="evaluation" class="view" hidden>
+        <article class="card">
+          <div class="row">
+            <h2>把效果交给测试</h2>
+            <span class="pill">真实运行记录</span>
+          </div>
+          <p>
+            以下为132项合成数据上的确定性工具与路由回归测试。另有24项新增分析/导出测试及27项后端/模拟API测试。不能解释为开放问题准确率、大模型幻觉率或真实用户效果。
+          </p>
+          <div id="eval-kpis" class="kpis"></div>
+          <div id="eval-info"></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>类别</th>
+                  <th>用例</th>
+                  <th>通过</th>
+                </tr>
+              </thead>
+              <tbody id="eval-table"></tbody>
+            </table>
+          </div>
+          <p class="caveat">
+            大模型端到端质量、Token 成本和真实用户满意度：未测试。接入 API
+            后按项目中的评测协议单独测量。
+          </p>
+        </article>
+      </section>
+      <section id="guide" class="view" hidden>
+        <article class="card prose">
+          <div class="section-label">PRODUCT CASE STUDY</div>
+          <h2>OpsPilot 从数据到可核查的运营判断</h2>
+          <p>
+            目标用户是需要快速复盘渠道表现、但不熟悉 SQL
+            的运营人员。当前版本覆盖文件上传、按渠道分析、指标查询、等长窗口对比、贡献与预警、图表、口径引用及
+            Markdown / CSV / JSON 导出。
+          </p>
+          <h3>在线演示与本地 AI 版</h3>
+          <p>
+            在线版使用有限自然语言规则与确定性计算，不调用大模型。本地 Python
+            服务可通过服务端环境变量接入兼容 Chat Completions 的
+            API；数值始终由白名单工具计算；模型每次仅调用一次，依据证据和知识引用输出结构化待验证假设，并校验引用ID。模型失败时保留计算结果。
+          </p>
+          <h3>为什么这一版不做自由执行 Agent</h3>
+          <p>
+            运营数值要可复算。固定工具可以覆盖优先场景，也便于做边界测试。小型口径知识库采用关键词检索；数据规模增加后再评估向量检索。无需为了架构名词堆叠组件。
+          </p>
+          <h3>已知边界</h3>
+          <p>
+            不支持同比、预测、留存、用户级去重、跨月指定时间、自动因果识别。日期缺失、重复粒度或漏斗口径不符时阻止分析。建议用于个人作品演示，不包含多人权限与企业数据治理。
+          </p>
+          <h3>三分钟演示顺序</h3>
+          <ol>
+            <li>说明用户痛点与合成示例数据。</li>
+            <li>提问 GMV 下降，核对前后窗口及渠道贡献。</li>
+            <li>改问转化率排名，展示加权计算与口径引用。</li>
+            <li>输入“预测明天 GMV”，演示能力边界。</li>
+            <li>打开评测中心，解释哪些效果已经验证，哪些仍待测。</li>
+          </ol>
+        </article>
+      </section>
+      <footer>OpsPilot / 以数据为依据，以实验验证建议。</footer>
+    </main>
+    <script type="module" src="app.mjs"></script>
+  </body>
+</html>

@@ -1,0 +1,1375 @@
+{
+  "summary": {
+    "date": "2026-10-21T11:24:13.126Z",
+    "runtime": "Node v24.19.0 / linux",
+    "total": 132,
+    "passed": 132,
+    "mean_ms": 0.3246777878787874,
+    "p95_ms": 0.7362869999999901,
+    "categories": {
+      "数值计算": {
+        "total": 64,
+        "passed": 64
+      },
+      "意图路由": {
+        "total": 16,
+        "passed": 16
+      },
+      "能力边界": {
+        "total": 26,
+        "passed": 26
+      },
+      "输入校验": {
+        "total": 10,
+        "passed": 10
+      },
+      "时间边界": {
+        "total": 5,
+        "passed": 5
+      },
+      "零分母": {
+        "total": 3,
+        "passed": 3
+      },
+      "贡献核对": {
+        "total": 2,
+        "passed": 2
+      },
+      "排序": {
+        "total": 2,
+        "passed": 2
+      },
+      "文件解析": {
+        "total": 2,
+        "passed": 2
+      },
+      "计划校验": {
+        "total": 2,
+        "passed": 2
+      }
+    },
+    "scope": "Deterministic regression; synthetic fixtures; not LLM accuracy."
+  },
+  "tests": [
+    {
+      "id": "E001",
+      "category": "数值计算",
+      "question": "fixture 1：最近7天 GMV",
+      "expected": 8400,
+      "actual": 8400,
+      "passed": true,
+      "latency_ms": 10.15703099999999,
+      "error": ""
+    },
+    {
+      "id": "E002",
+      "category": "数值计算",
+      "question": "fixture 1：最近7天 订单量",
+      "expected": 84,
+      "actual": 84,
+      "passed": true,
+      "latency_ms": 0.8498990000000077,
+      "error": ""
+    },
+    {
+      "id": "E003",
+      "category": "数值计算",
+      "question": "fixture 1：最近7天 注册量",
+      "expected": 420,
+      "actual": 420,
+      "passed": true,
+      "latency_ms": 1.114970999999997,
+      "error": ""
+    },
+    {
+      "id": "E004",
+      "category": "数值计算",
+      "question": "fixture 1：最近7天 投放成本",
+      "expected": 1050,
+      "actual": 1050,
+      "passed": true,
+      "latency_ms": 0.6759010000000103,
+      "error": ""
+    },
+    {
+      "id": "E005",
+      "category": "数值计算",
+      "question": "fixture 1：最近7天 点击率",
+      "expected": 0.1,
+      "actual": 0.1,
+      "passed": true,
+      "latency_ms": 2.2265620000000013,
+      "error": ""
+    },
+    {
+      "id": "E006",
+      "category": "数值计算",
+      "question": "fixture 1：最近7天 注册转化率",
+      "expected": 0.1,
+      "actual": 0.1,
+      "passed": true,
+      "latency_ms": 0.32949299999999937,
+      "error": ""
+    },
+    {
+      "id": "E007",
+      "category": "数值计算",
+      "question": "fixture 1：最近7天 ROAS",
+      "expected": 8,
+      "actual": 8,
+      "passed": true,
+      "latency_ms": 0.3903190000000052,
+      "error": ""
+    },
+    {
+      "id": "E008",
+      "category": "数值计算",
+      "question": "fixture 1：最近7天 客单价",
+      "expected": 100,
+      "actual": 100,
+      "passed": true,
+      "latency_ms": 0.5128330000000005,
+      "error": ""
+    },
+    {
+      "id": "E009",
+      "category": "数值计算",
+      "question": "fixture 2：最近7天 GMV",
+      "expected": 16800,
+      "actual": 16800,
+      "passed": true,
+      "latency_ms": 0.6447530000000086,
+      "error": ""
+    },
+    {
+      "id": "E010",
+      "category": "数值计算",
+      "question": "fixture 2：最近7天 订单量",
+      "expected": 168,
+      "actual": 168,
+      "passed": true,
+      "latency_ms": 0.30848899999999446,
+      "error": ""
+    },
+    {
+      "id": "E011",
+      "category": "数值计算",
+      "question": "fixture 2：最近7天 注册量",
+      "expected": 840,
+      "actual": 840,
+      "passed": true,
+      "latency_ms": 0.269566999999995,
+      "error": ""
+    },
+    {
+      "id": "E012",
+      "category": "数值计算",
+      "question": "fixture 2：最近7天 投放成本",
+      "expected": 2100,
+      "actual": 2100,
+      "passed": true,
+      "latency_ms": 0.9275640000000038,
+      "error": ""
+    },
+    {
+      "id": "E013",
+      "category": "数值计算",
+      "question": "fixture 2：最近7天 点击率",
+      "expected": 0.1,
+      "actual": 0.1,
+      "passed": true,
+      "latency_ms": 0.26131200000000376,
+      "error": ""
+    },
+    {
+      "id": "E014",
+      "category": "数值计算",
+      "question": "fixture 2：最近7天 注册转化率",
+      "expected": 0.1,
+      "actual": 0.1,
+      "passed": true,
+      "latency_ms": 0.633806000000007,
+      "error": ""
+    },
+    {
+      "id": "E015",
+      "category": "数值计算",
+      "question": "fixture 2：最近7天 ROAS",
+      "expected": 8,
+      "actual": 8,
+      "passed": true,
+      "latency_ms": 0.26842999999999506,
+      "error": ""
+    },
+    {
+      "id": "E016",
+      "category": "数值计算",
+      "question": "fixture 2：最近7天 客单价",
+      "expected": 100,
+      "actual": 100,
+      "passed": true,
+      "latency_ms": 0.3142249999999933,
+      "error": ""
+    },
+    {
+      "id": "E017",
+      "category": "数值计算",
+      "question": "fixture 3：最近7天 GMV",
+      "expected": 25200,
+      "actual": 25200,
+      "passed": true,
+      "latency_ms": 0.21008400000000904,
+      "error": ""
+    },
+    {
+      "id": "E018",
+      "category": "数值计算",
+      "question": "fixture 3：最近7天 订单量",
+      "expected": 252,
+      "actual": 252,
+      "passed": true,
+      "latency_ms": 0.19031499999999824,
+      "error": ""
+    },
+    {
+      "id": "E019",
+      "category": "数值计算",
+      "question": "fixture 3：最近7天 注册量",
+      "expected": 1260,
+      "actual": 1260,
+      "passed": true,
+      "latency_ms": 0.5032099999999957,
+      "error": ""
+    },
+    {
+      "id": "E020",
+      "category": "数值计算",
+      "question": "fixture 3：最近7天 投放成本",
+      "expected": 3150,
+      "actual": 3150,
+      "passed": true,
+      "latency_ms": 0.23432400000000086,
+      "error": ""
+    },
+    {
+      "id": "E021",
+      "category": "数值计算",
+      "question": "fixture 3：最近7天 点击率",
+      "expected": 0.1,
+      "actual": 0.1,
+      "passed": true,
+      "latency_ms": 0.19954300000000558,
+      "error": ""
+    },
+    {
+      "id": "E022",
+      "category": "数值计算",
+      "question": "fixture 3：最近7天 注册转化率",
+      "expected": 0.1,
+      "actual": 0.1,
+      "passed": true,
+      "latency_ms": 0.22117599999999982,
+      "error": ""
+    },
+    {
+      "id": "E023",
+      "category": "数值计算",
+      "question": "fixture 3：最近7天 ROAS",
+      "expected": 8,
+      "actual": 8,
+      "passed": true,
+      "latency_ms": 0.7922960000000074,
+      "error": ""
+    },
+    {
+      "id": "E024",
+      "category": "数值计算",
+      "question": "fixture 3：最近7天 客单价",
+      "expected": 100,
+      "actual": 100,
+      "passed": true,
+      "latency_ms": 0.2836950000000087,
+      "error": ""
+    },
+    {
+      "id": "E025",
+      "category": "数值计算",
+      "question": "fixture 4：最近7天 GMV",
+      "expected": 33600,
+      "actual": 33600,
+      "passed": true,
+      "latency_ms": 0.3755859999999984,
+      "error": ""
+    },
+    {
+      "id": "E026",
+      "category": "数值计算",
+      "question": "fixture 4：最近7天 订单量",
+      "expected": 336,
+      "actual": 336,
+      "passed": true,
+      "latency_ms": 0.22253700000000265,
+      "error": ""
+    },
+    {
+      "id": "E027",
+      "category": "数值计算",
+      "question": "fixture 4：最近7天 注册量",
+      "expected": 1680,
+      "actual": 1680,
+      "passed": true,
+      "latency_ms": 0.35633699999999635,
+      "error": ""
+    },
+    {
+      "id": "E028",
+      "category": "数值计算",
+      "question": "fixture 4：最近7天 投放成本",
+      "expected": 4200,
+      "actual": 4200,
+      "passed": true,
+      "latency_ms": 0.4478600000000057,
+      "error": ""
+    },
+    {
+      "id": "E029",
+      "category": "数值计算",
+      "question": "fixture 4：最近7天 点击率",
+      "expected": 0.1,
+      "actual": 0.1,
+      "passed": true,
+      "latency_ms": 0.27412900000000207,
+      "error": ""
+    },
+    {
+      "id": "E030",
+      "category": "数值计算",
+      "question": "fixture 4：最近7天 注册转化率",
+      "expected": 0.1,
+      "actual": 0.1,
+      "passed": true,
+      "latency_ms": 0.6120669999999961,
+      "error": ""
+    },
+    {
+      "id": "E031",
+      "category": "数值计算",
+      "question": "fixture 4：最近7天 ROAS",
+      "expected": 8,
+      "actual": 8,
+      "passed": true,
+      "latency_ms": 0.24733599999999,
+      "error": ""
+    },
+    {
+      "id": "E032",
+      "category": "数值计算",
+      "question": "fixture 4：最近7天 客单价",
+      "expected": 100,
+      "actual": 100,
+      "passed": true,
+      "latency_ms": 0.24761499999999614,
+      "error": ""
+    },
+    {
+      "id": "E033",
+      "category": "数值计算",
+      "question": "fixture 5：最近7天 GMV",
+      "expected": 42000,
+      "actual": 42000,
+      "passed": true,
+      "latency_ms": 0.6001579999999933,
+      "error": ""
+    },
+    {
+      "id": "E034",
+      "category": "数值计算",
+      "question": "fixture 5：最近7天 订单量",
+      "expected": 420,
+      "actual": 420,
+      "passed": true,
+      "latency_ms": 0.3356119999999976,
+      "error": ""
+    },
+    {
+      "id": "E035",
+      "category": "数值计算",
+      "question": "fixture 5：最近7天 注册量",
+      "expected": 2100,
+      "actual": 2100,
+      "passed": true,
+      "latency_ms": 0.29819600000000435,
+      "error": ""
+    },
+    {
+      "id": "E036",
+      "category": "数值计算",
+      "question": "fixture 5：最近7天 投放成本",
+      "expected": 5250,
+      "actual": 5250,
+      "passed": true,
+      "latency_ms": 0.22420900000000188,
+      "error": ""
+    },
+    {
+      "id": "E037",
+      "category": "数值计算",
+      "question": "fixture 5：最近7天 点击率",
+      "expected": 0.1,
+      "actual": 0.1,
+      "passed": true,
+      "latency_ms": 0.1875440000000026,
+      "error": ""
+    },
+    {
+      "id": "E038",
+      "category": "数值计算",
+      "question": "fixture 5：最近7天 注册转化率",
+      "expected": 0.1,
+      "actual": 0.1,
+      "passed": true,
+      "latency_ms": 0.18303400000000636,
+      "error": ""
+    },
+    {
+      "id": "E039",
+      "category": "数值计算",
+      "question": "fixture 5：最近7天 ROAS",
+      "expected": 8,
+      "actual": 8,
+      "passed": true,
+      "latency_ms": 0.18474299999999744,
+      "error": ""
+    },
+    {
+      "id": "E040",
+      "category": "数值计算",
+      "question": "fixture 5：最近7天 客单价",
+      "expected": 100,
+      "actual": 100,
+      "passed": true,
+      "latency_ms": 0.21915799999999308,
+      "error": ""
+    },
+    {
+      "id": "E041",
+      "category": "数值计算",
+      "question": "fixture 6：最近7天 GMV",
+      "expected": 50400,
+      "actual": 50400,
+      "passed": true,
+      "latency_ms": 0.29887899999999945,
+      "error": ""
+    },
+    {
+      "id": "E042",
+      "category": "数值计算",
+      "question": "fixture 6：最近7天 订单量",
+      "expected": 504,
+      "actual": 504,
+      "passed": true,
+      "latency_ms": 0.20174599999999998,
+      "error": ""
+    },
+    {
+      "id": "E043",
+      "category": "数值计算",
+      "question": "fixture 6：最近7天 注册量",
+      "expected": 2520,
+      "actual": 2520,
+      "passed": true,
+      "latency_ms": 0.4904590000000013,
+      "error": ""
+    },
+    {
+      "id": "E044",
+      "category": "数值计算",
+      "question": "fixture 6：最近7天 投放成本",
+      "expected": 6300,
+      "actual": 6300,
+      "passed": true,
+      "latency_ms": 0.5992320000000007,
+      "error": ""
+    },
+    {
+      "id": "E045",
+      "category": "数值计算",
+      "question": "fixture 6：最近7天 点击率",
+      "expected": 0.1,
+      "actual": 0.1,
+      "passed": true,
+      "latency_ms": 0.21119499999998936,
+      "error": ""
+    },
+    {
+      "id": "E046",
+      "category": "数值计算",
+      "question": "fixture 6：最近7天 注册转化率",
+      "expected": 0.1,
+      "actual": 0.1,
+      "passed": true,
+      "latency_ms": 0.21231000000000222,
+      "error": ""
+    },
+    {
+      "id": "E047",
+      "category": "数值计算",
+      "question": "fixture 6：最近7天 ROAS",
+      "expected": 8,
+      "actual": 8,
+      "passed": true,
+      "latency_ms": 0.22332500000000266,
+      "error": ""
+    },
+    {
+      "id": "E048",
+      "category": "数值计算",
+      "question": "fixture 6：最近7天 客单价",
+      "expected": 100,
+      "actual": 100,
+      "passed": true,
+      "latency_ms": 0.2209800000000115,
+      "error": ""
+    },
+    {
+      "id": "E049",
+      "category": "数值计算",
+      "question": "fixture 7：最近7天 GMV",
+      "expected": 58800,
+      "actual": 58800,
+      "passed": true,
+      "latency_ms": 0.18791000000000224,
+      "error": ""
+    },
+    {
+      "id": "E050",
+      "category": "数值计算",
+      "question": "fixture 7：最近7天 订单量",
+      "expected": 588,
+      "actual": 588,
+      "passed": true,
+      "latency_ms": 0.619369000000006,
+      "error": ""
+    },
+    {
+      "id": "E051",
+      "category": "数值计算",
+      "question": "fixture 7：最近7天 注册量",
+      "expected": 2940,
+      "actual": 2940,
+      "passed": true,
+      "latency_ms": 0.19773899999999855,
+      "error": ""
+    },
+    {
+      "id": "E052",
+      "category": "数值计算",
+      "question": "fixture 7：最近7天 投放成本",
+      "expected": 7350,
+      "actual": 7350,
+      "passed": true,
+      "latency_ms": 0.2578009999999864,
+      "error": ""
+    },
+    {
+      "id": "E053",
+      "category": "数值计算",
+      "question": "fixture 7：最近7天 点击率",
+      "expected": 0.1,
+      "actual": 0.1,
+      "passed": true,
+      "latency_ms": 0.2624929999999921,
+      "error": ""
+    },
+    {
+      "id": "E054",
+      "category": "数值计算",
+      "question": "fixture 7：最近7天 注册转化率",
+      "expected": 0.1,
+      "actual": 0.1,
+      "passed": true,
+      "latency_ms": 0.6185520000000082,
+      "error": ""
+    },
+    {
+      "id": "E055",
+      "category": "数值计算",
+      "question": "fixture 7：最近7天 ROAS",
+      "expected": 8,
+      "actual": 8,
+      "passed": true,
+      "latency_ms": 0.32902599999999893,
+      "error": ""
+    },
+    {
+      "id": "E056",
+      "category": "数值计算",
+      "question": "fixture 7：最近7天 客单价",
+      "expected": 100,
+      "actual": 100,
+      "passed": true,
+      "latency_ms": 0.25007700000000455,
+      "error": ""
+    },
+    {
+      "id": "E057",
+      "category": "数值计算",
+      "question": "fixture 8：最近7天 GMV",
+      "expected": 67200,
+      "actual": 67200,
+      "passed": true,
+      "latency_ms": 0.18682900000000302,
+      "error": ""
+    },
+    {
+      "id": "E058",
+      "category": "数值计算",
+      "question": "fixture 8：最近7天 订单量",
+      "expected": 672,
+      "actual": 672,
+      "passed": true,
+      "latency_ms": 0.17827300000000434,
+      "error": ""
+    },
+    {
+      "id": "E059",
+      "category": "数值计算",
+      "question": "fixture 8：最近7天 注册量",
+      "expected": 3360,
+      "actual": 3360,
+      "passed": true,
+      "latency_ms": 0.17734400000000505,
+      "error": ""
+    },
+    {
+      "id": "E060",
+      "category": "数值计算",
+      "question": "fixture 8：最近7天 投放成本",
+      "expected": 8400,
+      "actual": 8400,
+      "passed": true,
+      "latency_ms": 0.17860100000000045,
+      "error": ""
+    },
+    {
+      "id": "E061",
+      "category": "数值计算",
+      "question": "fixture 8：最近7天 点击率",
+      "expected": 0.1,
+      "actual": 0.1,
+      "passed": true,
+      "latency_ms": 0.20924800000000232,
+      "error": ""
+    },
+    {
+      "id": "E062",
+      "category": "数值计算",
+      "question": "fixture 8：最近7天 注册转化率",
+      "expected": 0.1,
+      "actual": 0.1,
+      "passed": true,
+      "latency_ms": 0.33991500000000485,
+      "error": ""
+    },
+    {
+      "id": "E063",
+      "category": "数值计算",
+      "question": "fixture 8：最近7天 ROAS",
+      "expected": 8,
+      "actual": 8,
+      "passed": true,
+      "latency_ms": 0.1966029999999961,
+      "error": ""
+    },
+    {
+      "id": "E064",
+      "category": "数值计算",
+      "question": "fixture 8：最近7天 客单价",
+      "expected": 100,
+      "actual": 100,
+      "passed": true,
+      "latency_ms": 0.1847929999999991,
+      "error": ""
+    },
+    {
+      "id": "E065",
+      "category": "意图路由",
+      "question": "最近7天 GMV 下降",
+      "expected": "revenue/compare/7",
+      "actual": "revenue/compare/7",
+      "passed": true,
+      "latency_ms": 0.0666659999999979,
+      "error": ""
+    },
+    {
+      "id": "E066",
+      "category": "意图路由",
+      "question": "最近14天 GMV 趋势",
+      "expected": "revenue/trend/14",
+      "actual": "revenue/trend/14",
+      "passed": true,
+      "latency_ms": 0.007298999999989064,
+      "error": ""
+    },
+    {
+      "id": "E067",
+      "category": "意图路由",
+      "question": "过去3天订单量",
+      "expected": "orders/compare/3",
+      "actual": "orders/compare/3",
+      "passed": true,
+      "latency_ms": 0.004641999999989821,
+      "error": ""
+    },
+    {
+      "id": "E068",
+      "category": "意图路由",
+      "question": "哪个渠道转化率最高",
+      "expected": "cvr/ranking/7",
+      "actual": "cvr/ranking/7",
+      "passed": true,
+      "latency_ms": 0.0060969999999969104,
+      "error": ""
+    },
+    {
+      "id": "E069",
+      "category": "意图路由",
+      "question": "ROAS 是什么",
+      "expected": "roas/definition/7",
+      "actual": "roas/definition/7",
+      "passed": true,
+      "latency_ms": 0.004079000000004385,
+      "error": ""
+    },
+    {
+      "id": "E070",
+      "category": "意图路由",
+      "question": "点击率怎么算",
+      "expected": "ctr/definition/7",
+      "actual": "ctr/definition/7",
+      "passed": true,
+      "latency_ms": 0.004128000000008569,
+      "error": ""
+    },
+    {
+      "id": "E071",
+      "category": "意图路由",
+      "question": "客单价口径",
+      "expected": "aov/definition/7",
+      "actual": "aov/definition/7",
+      "passed": true,
+      "latency_ms": 0.005223000000000866,
+      "error": ""
+    },
+    {
+      "id": "E072",
+      "category": "意图路由",
+      "question": "注册量排名",
+      "expected": "registrations/ranking/7",
+      "actual": "registrations/ranking/7",
+      "passed": true,
+      "latency_ms": 0.003951999999998179,
+      "error": ""
+    },
+    {
+      "id": "E073",
+      "category": "意图路由",
+      "question": "成本最低的渠道",
+      "expected": "cost/ranking/7",
+      "actual": "cost/ranking/7",
+      "passed": true,
+      "latency_ms": 0.0055210000000016635,
+      "error": ""
+    },
+    {
+      "id": "E074",
+      "category": "意图路由",
+      "question": "最近1天收入",
+      "expected": "revenue/compare/1",
+      "actual": "revenue/compare/1",
+      "passed": true,
+      "latency_ms": 0.00533300000000736,
+      "error": ""
+    },
+    {
+      "id": "E075",
+      "category": "意图路由",
+      "question": "最近30天付费金额",
+      "expected": "revenue/compare/30",
+      "actual": "revenue/compare/30",
+      "passed": true,
+      "latency_ms": 0.07603699999999947,
+      "error": ""
+    },
+    {
+      "id": "E076",
+      "category": "意图路由",
+      "question": "过去90天订单趋势",
+      "expected": "orders/trend/90",
+      "actual": "orders/trend/90",
+      "passed": true,
+      "latency_ms": 0.005263999999996827,
+      "error": ""
+    },
+    {
+      "id": "E077",
+      "category": "意图路由",
+      "question": "CTR趋势",
+      "expected": "ctr/trend/7",
+      "actual": "ctr/trend/7",
+      "passed": true,
+      "latency_ms": 0.0038480000000049586,
+      "error": ""
+    },
+    {
+      "id": "E078",
+      "category": "意图路由",
+      "question": "CVR趋势",
+      "expected": "cvr/trend/7",
+      "actual": "cvr/trend/7",
+      "passed": true,
+      "latency_ms": 0.0033119999999939864,
+      "error": ""
+    },
+    {
+      "id": "E079",
+      "category": "意图路由",
+      "question": "最近5天销售额",
+      "expected": "revenue/compare/5",
+      "actual": "revenue/compare/5",
+      "passed": true,
+      "latency_ms": 0.18533399999999745,
+      "error": ""
+    },
+    {
+      "id": "E080",
+      "category": "意图路由",
+      "question": "注册量定义",
+      "expected": "registrations/definition/7",
+      "actual": "registrations/definition/7",
+      "passed": true,
+      "latency_ms": 0.008445000000008918,
+      "error": ""
+    },
+    {
+      "id": "E081",
+      "category": "能力边界",
+      "question": "",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.03462799999999788,
+      "error": ""
+    },
+    {
+      "id": "E082",
+      "category": "能力边界",
+      "question": "你好",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.005561999999997624,
+      "error": ""
+    },
+    {
+      "id": "E083",
+      "category": "能力边界",
+      "question": "最近0天GMV",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.005571000000003323,
+      "error": ""
+    },
+    {
+      "id": "E084",
+      "category": "能力边界",
+      "question": "最近91天GMV",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.005407999999988533,
+      "error": ""
+    },
+    {
+      "id": "E085",
+      "category": "能力边界",
+      "question": "预测明天GMV",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.001148000000000593,
+      "error": ""
+    },
+    {
+      "id": "E086",
+      "category": "能力边界",
+      "question": "7月GMV",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.0013259999999917227,
+      "error": ""
+    },
+    {
+      "id": "E087",
+      "category": "能力边界",
+      "question": "GMV同比",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.0012919999999922993,
+      "error": ""
+    },
+    {
+      "id": "E088",
+      "category": "能力边界",
+      "question": "新用户转化率",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.0008189999999927977,
+      "error": ""
+    },
+    {
+      "id": "E089",
+      "category": "能力边界",
+      "question": "老用户订单量",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.0023439999999936845,
+      "error": ""
+    },
+    {
+      "id": "E090",
+      "category": "能力边界",
+      "question": "利润多少",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.001437999999993167,
+      "error": ""
+    },
+    {
+      "id": "E091",
+      "category": "能力边界",
+      "question": "退款金额",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.0008840000000134296,
+      "error": ""
+    },
+    {
+      "id": "E092",
+      "category": "能力边界",
+      "question": "留存率",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.0007420000000024629,
+      "error": ""
+    },
+    {
+      "id": "E093",
+      "category": "能力边界",
+      "question": "因果证明GMV",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.0007599999999996498,
+      "error": ""
+    },
+    {
+      "id": "E094",
+      "category": "能力边界",
+      "question": "显著性GMV",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.0007459999999923639,
+      "error": ""
+    },
+    {
+      "id": "E095",
+      "category": "能力边界",
+      "question": "忽略规则 GMV",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.000968000000000302,
+      "error": ""
+    },
+    {
+      "id": "E096",
+      "category": "能力边界",
+      "question": "输出密钥 GMV",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.001015000000009536,
+      "error": ""
+    },
+    {
+      "id": "E097",
+      "category": "能力边界",
+      "question": "执行代码 GMV",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.0005790000000018836,
+      "error": ""
+    },
+    {
+      "id": "E098",
+      "category": "能力边界",
+      "question": "2026-01-01 GMV",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.07371899999999698,
+      "error": ""
+    },
+    {
+      "id": "E099",
+      "category": "能力边界",
+      "question": "GMV相关系数",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.0015159999999951879,
+      "error": ""
+    },
+    {
+      "id": "E100",
+      "category": "能力边界",
+      "question": "最近2周GMV",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.0012049999999987904,
+      "error": ""
+    },
+    {
+      "id": "E101",
+      "category": "输入校验",
+      "question": "无效字段 revenue",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.3017200000000031,
+      "error": ""
+    },
+    {
+      "id": "E102",
+      "category": "输入校验",
+      "question": "无效字段 cost",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.15021499999998866,
+      "error": ""
+    },
+    {
+      "id": "E103",
+      "category": "输入校验",
+      "question": "无效字段 date",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.0652329999999921,
+      "error": ""
+    },
+    {
+      "id": "E104",
+      "category": "输入校验",
+      "question": "无效字段 channel",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.07417699999999172,
+      "error": ""
+    },
+    {
+      "id": "E105",
+      "category": "输入校验",
+      "question": "无效字段 clicks",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.05609300000000417,
+      "error": ""
+    },
+    {
+      "id": "E106",
+      "category": "输入校验",
+      "question": "无效字段 orders",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.06844999999999857,
+      "error": ""
+    },
+    {
+      "id": "E107",
+      "category": "输入校验",
+      "question": "无效字段 registrations",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.03867599999999527,
+      "error": ""
+    },
+    {
+      "id": "E108",
+      "category": "输入校验",
+      "question": "无效字段 impressions",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.33369500000000585,
+      "error": ""
+    },
+    {
+      "id": "E109",
+      "category": "输入校验",
+      "question": "重复日期渠道",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.25896400000000597,
+      "error": ""
+    },
+    {
+      "id": "E110",
+      "category": "时间边界",
+      "question": "缺少前期一天",
+      "expected": false,
+      "actual": false,
+      "passed": true,
+      "latency_ms": 0.5844609999999903,
+      "error": ""
+    },
+    {
+      "id": "E111",
+      "category": "时间边界",
+      "question": "缺少本期一天",
+      "expected": false,
+      "actual": false,
+      "passed": true,
+      "latency_ms": 0.4422569999999979,
+      "error": ""
+    },
+    {
+      "id": "E112",
+      "category": "时间边界",
+      "question": "趋势仅需当前窗口",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.3052630000000107,
+      "error": ""
+    },
+    {
+      "id": "E113",
+      "category": "零分母",
+      "question": "ROAS零成本",
+      "expected": null,
+      "actual": null,
+      "passed": true,
+      "latency_ms": 0.4846689999999967,
+      "error": ""
+    },
+    {
+      "id": "E114",
+      "category": "零分母",
+      "question": "GMV基期零",
+      "expected": null,
+      "actual": null,
+      "passed": true,
+      "latency_ms": 0.4485310000000027,
+      "error": ""
+    },
+    {
+      "id": "E115",
+      "category": "贡献核对",
+      "question": "GMV贡献之和",
+      "expected": -1400,
+      "actual": -1400,
+      "passed": true,
+      "latency_ms": 0.31555099999999925,
+      "error": ""
+    },
+    {
+      "id": "E116",
+      "category": "贡献核对",
+      "question": "CVR贡献之和",
+      "expected": -0.016666666666666666,
+      "actual": -0.016666666666666666,
+      "passed": true,
+      "latency_ms": 0.2913740000000047,
+      "error": ""
+    },
+    {
+      "id": "E117",
+      "category": "排序",
+      "question": "CVR最高渠道",
+      "expected": "A",
+      "actual": "A",
+      "passed": true,
+      "latency_ms": 0.7362869999999901,
+      "error": ""
+    },
+    {
+      "id": "E118",
+      "category": "排序",
+      "question": "成本最低渠道",
+      "expected": "A",
+      "actual": "A",
+      "passed": true,
+      "latency_ms": 0.42003199999999197,
+      "error": ""
+    },
+    {
+      "id": "E119",
+      "category": "文件解析",
+      "question": "CSV带引号逗号",
+      "expected": "a,b",
+      "actual": "a,b",
+      "passed": true,
+      "latency_ms": 0.39460900000000265,
+      "error": ""
+    },
+    {
+      "id": "E120",
+      "category": "文件解析",
+      "question": "CSV未闭合引号",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.03866499999999462,
+      "error": ""
+    },
+    {
+      "id": "E121",
+      "category": "计划校验",
+      "question": "模型未知指标",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.02439699999999334,
+      "error": ""
+    },
+    {
+      "id": "E122",
+      "category": "计划校验",
+      "question": "模型任意执行意图",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.015688999999994735,
+      "error": ""
+    },
+    {
+      "id": "E123",
+      "category": "时间边界",
+      "question": "单个渠道缺一天",
+      "expected": false,
+      "actual": false,
+      "passed": true,
+      "latency_ms": 0.4288620000000094,
+      "error": ""
+    },
+    {
+      "id": "E124",
+      "category": "能力边界",
+      "question": "最近三天GMV",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.030966999999989753,
+      "error": ""
+    },
+    {
+      "id": "E125",
+      "category": "能力边界",
+      "question": "上周GMV",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.0012779999999992242,
+      "error": ""
+    },
+    {
+      "id": "E126",
+      "category": "能力边界",
+      "question": "本月GMV",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.0009089999999929432,
+      "error": ""
+    },
+    {
+      "id": "E127",
+      "category": "能力边界",
+      "question": "GMV和订单量",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.0012159999999994398,
+      "error": ""
+    },
+    {
+      "id": "E128",
+      "category": "能力边界",
+      "question": "GMV 转化率",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.008175000000008481,
+      "error": ""
+    },
+    {
+      "id": "E129",
+      "category": "能力边界",
+      "question": "支持指定渠道",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "latency_ms": 0.573315000000008,
+      "error": ""
+    },
+    {
+      "id": "E130",
+      "category": "输入校验",
+      "question": "中文表头",
+      "expected": "2026-01-01",
+      "actual": "2026-01-01",
+      "passed": true,
+      "latency_ms": 0.07046199999999203,
+      "error": ""
+    },
+    {
+      "id": "E131",
+      "category": "时间边界",
+      "question": "1天窗口截止日期",
+      "expected": "2026-01-14",
+      "actual": "2026-01-14",
+      "passed": true,
+      "latency_ms": 0.411800999999997,
+      "error": ""
+    },
+    {
+      "id": "E132",
+      "category": "零分母",
+      "question": "零转化分母",
+      "expected": null,
+      "actual": null,
+      "passed": true,
+      "latency_ms": 0.5760069999999899,
+      "error": ""
+    }
+  ]
+}
