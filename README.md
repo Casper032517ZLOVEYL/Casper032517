@@ -15,7 +15,7 @@
 本机运行需要 **Python3.11+、Node20+**，无第三方运行依赖：
 
 ```bash
-git clone https://github.com/Casper032517ZLOVEYL/-.git opspilot
+git clone https://github.com/Casper032517ZLOVEYL/Casper032517.git opspilot
 cd opspilot
 python server.py
 ```
