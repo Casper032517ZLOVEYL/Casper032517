@@ -51,7 +51,7 @@ def create_app(settings=None, username=None, password=None, allowed_hosts=None):
             path = env.get('PATH_INFO','/')
             method = env.get('REQUEST_METHOD','GET')
             if path=='/api/health' and method=='GET':
-                return send({'ok':True,'version':'1.2.0'})
+                return send({'ok':True,'version':'1.3.0'})
             authorization = env.get('HTTP_AUTHORIZATION','')
             supplied = b''
             if authorization.startswith('Basic '):
@@ -60,7 +60,7 @@ def create_app(settings=None, username=None, password=None, allowed_hosts=None):
             if not hmac.compare_digest(supplied,expected):
                 return send({'ok':False,'error':'Authentication required'},401,extra=[('WWW-Authenticate','Basic realm="OpsPilot", charset="UTF-8"')])
             if path=='/api/config' and method=='GET':
-                return send({'ai':settings.enabled,'version':'1.2.0','max_rows':20000})
+                return send({'ai':settings.enabled,'version':'1.3.0','max_rows':20000})
             if path=='/api/analyze' and method=='POST':
                 origin=env.get('HTTP_ORIGIN')
                 if origin and origin not in ('http://'+host,'https://'+host):

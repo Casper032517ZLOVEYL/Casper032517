@@ -1,3 +1,12 @@
+# 1.3.0 · 2026-10-22
+
+- Add linked dashboard metric/group/date filters, trend, additive composition, ranking and daily calendar.
+- Add searchable, sortable, paginated group table with filtered CSV export.
+- Reuse validated analytics; distinguish missing prior periods, null ratios and zero totals.
+- Fix chart currency labels to use the imported currency.
+- Add MIT license, data attribution, security reporting guidance and dashboard documentation.
+- Add 15 dashboard checks; 132 historical regressions, 73 JS checks and 50 Python checks pass locally.
+
 # 版本记录
 
 ## 1.2.0 · 2026-10-21

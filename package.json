@@ -1,7 +1,8 @@
 {
   "name": "opspilot",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "private": true,
+  "license": "MIT",
   "description": "Evidence-first operations analytics copilot with reproducible tools and optional LLM hypotheses",
   "type": "module",
   "scripts": {

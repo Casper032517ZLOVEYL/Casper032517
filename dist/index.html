@@ -15,7 +15,8 @@
       >
       <div class="nav-label">WORKSPACE</div>
       <nav>
-        <button class="active" data-view="analysis">
+        <button class="active" data-view="dashboard">▦ <span>经营看板</span></button>
+        <button data-view="analysis">
           ◫ <span>分析工作台</span></button
         ><button data-view="data">▤ <span>数据与口径</span></button
         ><button data-view="evaluation">◎ <span>评测中心</span></button
@@ -24,7 +25,7 @@
       <div class="side-bottom">
         <div class="mode-pill" id="mode">本地计算模式</div>
         <p>每个结论，都能回到数据。</p>
-        <small>OpsPilot · v1.2 · 真实数据接入</small>
+        <small>OpsPilot · v1.3 · 可视化经营看板</small>
       </div>
     </aside>
     <main>
@@ -41,7 +42,35 @@
       <div class="notice" id="notice" role="status">
         公开真实交易案例 · 加载中。也可上传你自己的业务报表。
       </div>
-      <section id="analysis" class="view">
+      <section id="dashboard" class="view">
+        <div class="dashboard-intro"><div><span class="eyebrow">BUSINESS OVERVIEW</span><h2>把报表变成经营视野</h2><p class="muted" id="dash-scope"></p></div><button id="dash-upload">＋ 导入业务报表</button></div>
+        <form id="dash-filters" class="card dashboard-filters">
+          <label>核心指标<select id="dash-metric"></select></label>
+          <label>业务分组<select id="dash-channel"></select></label>
+          <label>开始日期<input type="date" id="dash-start" required /></label>
+          <label>结束日期<input type="date" id="dash-end" required /></label>
+          <button type="submit">应用筛选 ↗</button>
+          <div class="dashboard-presets"><span class="muted">截至所选结束日</span><button type="button" class="outline" data-days="7">近7天</button><button type="button" class="outline" data-days="14">近14天</button><button type="button" class="outline" data-days="30">近30天</button></div>
+        </form>
+        <p id="dash-error" class="error" role="alert" hidden></p>
+        <div id="dash-content">
+          <div id="dash-kpis" class="kpis"></div>
+          <p class="muted" id="dash-basis"></p>
+          <p class="caveat" id="dash-compare-note" hidden></p>
+          <div class="dashboard-grid">
+            <article class="card"><div class="section-label">01 / TREND</div><h3 id="dash-trend-name">每日趋势</h3><div id="dash-trend"></div><p class="muted">每个数据点可悬停查看数值；缺失记录会阻止计算。</p></article>
+            <article class="card"><div class="section-label">02 / COMPOSITION</div><h3>分组占比</h3><div id="dash-share"></div><p class="muted">仅销售额、订单等可加指标展示占比。</p></article>
+            <article class="card"><div class="section-label">03 / RANKING</div><h3>分组表现</h3><div id="dash-bars"></div><p class="muted">相同口径排序；比率均先汇总再相除。</p></article>
+            <article class="card"><div class="section-label">04 / CALENDAR</div><h3>每日经营日历</h3><div id="dash-calendar"></div><p class="muted" id="dash-calendar-unit"></p></article>
+          </div>
+          <article class="card dashboard-table"><div class="row"><div><div class="section-label">05 / DETAILS</div><h3>可核对的分组明细</h3></div><button id="dash-csv" class="outline">导出筛选结果 CSV</button></div>
+            <div class="dashboard-table-controls"><label>搜索分组<input id="dash-search" type="search" placeholder="输入渠道、门店或地区" maxlength="80" /></label><label>排序字段<select id="dash-sort"><option value="current">本期数值</option><option value="channel">分组名称</option><option value="previous">前期数值</option><option value="relative">相对变化</option><option value="share">本期占比</option></select></label><label>排序方向<select id="dash-direction"><option value="desc">从高到低</option><option value="asc">从低到高</option></select></label></div>
+            <div class="table-wrap"><table><thead><tr><th>分组</th><th>本期</th><th>前期</th><th>相对变化</th><th>本期占比</th></tr></thead><tbody id="dash-table"></tbody></table></div>
+            <div class="row dashboard-pagination"><span class="muted" id="dash-page" aria-live="polite"></span><div><button class="outline" id="dash-prev">上一页</button> <button class="outline" id="dash-next">下一页</button></div></div><p class="muted">每页10行；导出包含搜索后的全部分组，保持当前排序。“—”表示不可计算或不适用。</p>
+          </article>
+        </div>
+      </section>
+      <section id="analysis" class="view" hidden>
         <div class="topline">
           <span class="source" id="source">数据源</span
           ><span class="muted" id="coverage"></span

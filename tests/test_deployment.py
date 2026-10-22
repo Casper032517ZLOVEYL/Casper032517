@@ -53,7 +53,7 @@ class DeploymentTests(unittest.TestCase):
     def test_valid_auth_gets_frontend_and_security_headers(self):
         status,body,h=self.request();self.assertEqual(status,200);self.assertIn(b'OpsPilot',body);self.assertEqual(h['X-Frame-Options'],'DENY');self.assertIn("script-src 'self'",h['Content-Security-Policy'])
     def test_health_has_no_business_data_and_does_not_need_auth(self):
-        status,body,_=self.request('/api/health',auth=False);self.assertEqual(status,200);self.assertEqual(json.loads(body),{'ok':True,'version':'1.2.0'})
+        status,body,_=self.request('/api/health',auth=False);self.assertEqual(status,200);self.assertEqual(json.loads(body),{'ok':True,'version':'1.3.0'})
     def test_config_has_no_credentials(self):
         status,body,_=self.request('/api/config');self.assertEqual(status,200);self.assertNotIn(self.password,body.decode());self.assertNotIn('api_key',body.decode())
     def test_unknown_host_is_rejected(self):self.assertEqual(self.request(headers={'Host':'attacker.invalid'})[0],421)

@@ -2,11 +2,15 @@
 
 **上传自己的销售/渠道报表，先检查口径，再输出可复算的指标、图表与报告。**
 
-版本 **1.2.0**。可用于个人本地或受控小团队试点，AI辅助开发。在线默认使用有来源的**UCI真实零售交易**，也可上传自己的CSV/Excel。合成漏斗仅作为历史回归样例保留。
+版本 **1.3.0**。可用于个人本地或受控小团队试点，AI辅助开发。在线默认使用有来源的**UCI真实零售交易**，也可上传自己的CSV/Excel。合成漏斗仅作为历史回归样例保留。
 
 [在线私有工作台](https://opspilot-zhou-0922.zho12.chatgpt.site) · [真实数据接入](docs/REAL_DATA.md) · [PRD](docs/PRD.md) · [数据契约](docs/DATA_CONTRACT.md) · [部署指南](docs/DEPLOYMENT.md) · [API](docs/API.md) · [架构](docs/ARCHITECTURE.md)
 
-![工作台](docs/assets/preview-v1-2.jpg)
+![经营看板](docs/assets/preview-v1-3.jpg)
+
+## 1.3 可视化经营看板
+
+新增指标/分组/日期筛选表单、趋势折线图、分组占比环形图、横向排名、经营日历，以及可搜索、排序、分页和导出的明细表。全部图表复用验证后的计算引擎。比率不展示可加占比，前期不足时保留本期并明确提示。[看板使用说明](docs/DASHBOARD.md)
 
 ## 直接使用
 
@@ -20,7 +24,7 @@ cd opspilot
 python server.py
 ```
 
-打开http://127.0.0.1:8501。仓库当前私有，克隆需要自己的GitHub访问权限。
+打开http://127.0.0.1:8501。源码采用MIT许可，业务文件无需上传仓库。
 
 ## 把自己的数据跑起来
 
@@ -112,7 +116,7 @@ python tests/smoke_gunicorn.py
 - 50项Python模型/配置/API/认证/部署与独立Decimal核对。
 - 真实浏览器验证CSV、XLSX订单导入及自选日期；GitHub Actions配置检查Node20/22、Python3.11/3.12和Gunicorn入口。
 
-上述240项自动检查不代表模型准确率或用户任务成功率。Actions执行状态以仓库为准；本地通过不等于云端已通过。后续真实模型/用户任务验收清单见[人工评审](docs/HUMAN_EVAL.md)。
+1.3新增15项看板检查（累计255项）；上述自动检查不代表模型准确率或用户任务成功率。Actions执行状态以仓库为准；本地通过不等于云端已通过。后续真实模型/用户任务验收清单见[人工评审](docs/HUMAN_EVAL.md)。
 
 ## 结构
 
@@ -135,4 +139,4 @@ docs/                         当前文档与历史资料
 Dockerfile / compose.yaml     受控部署配置（容器未实测）
 ```
 
-旧PDF、SVG、视频在docs/archive与docs/assets，描述1.0历史版本；当前能力以1.2文档和代码为准。代码未授予开源许可证，仓库保持私有；UCI派生数据遵循其独立CC BY4.0许可。
+旧PDF、SVG、视频在docs/archive与docs/assets，描述1.0历史版本；当前能力以1.3文档和代码为准。原创代码与项目文档采用[MIT许可](LICENSE)；UCI派生数据遵循独立CC BY4.0许可，详见[第三方署名](THIRD_PARTY_NOTICES.md)。

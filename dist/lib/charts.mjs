@@ -15,7 +15,7 @@ export function chart(r) {
     m = r.plan.metric,
     W = 560,
     H = 225,
-    left = 65,
+    left = 110,
     right = 16,
     top = 12,
     bottom = 39,
@@ -26,14 +26,14 @@ export function chart(r) {
   for (let i = 0; i < 4; i++) {
     let y = top + (ph * i) / 3,
       v = max * (1 - i / 3);
-    svg += `<line x1="${left}" y1="${y}" x2="${W - right}" y2="${y}" stroke="#e9edf4"/><text x="${left - 9}" y="${y + 4}" text-anchor="end" fill="#8492a8" font-size="11">${esc(format(v, m))}</text>`;
+    svg += `<line x1="${left}" y1="${y}" x2="${W - right}" y2="${y}" stroke="#e9edf4"/><text x="${left - 9}" y="${y + 4}" text-anchor="end" fill="#8492a8" font-size="11">${esc(format(v, m, r.currency))}</text>`;
   }
   const x = (i) => left + ((i + 0.5) * pw) / data.length,
     y = (v) => top + ph - (v / max) * ph;
   if (rank) {
     data.forEach((d, i) => {
       if (d.value !== null)
-        svg += `<rect x="${x(i) - (pw / data.length) * 0.24}" y="${y(d.value)}" width="${(pw / data.length) * 0.48}" height="${top + ph - y(d.value)}" rx="4" fill="#4d76ed"><title>${esc(d.date)}：${esc(format(d.value, m))}</title></rect>`;
+        svg += `<rect x="${x(i) - (pw / data.length) * 0.24}" y="${y(d.value)}" width="${(pw / data.length) * 0.48}" height="${top + ph - y(d.value)}" rx="4" fill="#4d76ed"><title>${esc(d.date)}：${esc(format(d.value, m, r.currency))}</title></rect>`;
     });
   } else {
     let segments = [],
@@ -49,7 +49,7 @@ export function chart(r) {
       svg += `<polyline points="${s.join(" ")}" fill="none" stroke="#4773ed" stroke-width="2.7"/>`;
     data.forEach((d, i) => {
       if (d.value !== null)
-        svg += `<circle cx="${x(i)}" cy="${y(d.value)}" r="3.5" fill="white" stroke="#4773ed" stroke-width="2"><title>${esc(d.date)}：${esc(format(d.value, m))}</title></circle>`;
+        svg += `<circle cx="${x(i)}" cy="${y(d.value)}" r="3.5" fill="white" stroke="#4773ed" stroke-width="2"><title>${esc(d.date)}：${esc(format(d.value, m, r.currency))}</title></circle>`;
     });
   }
   data.forEach((d, i) => {

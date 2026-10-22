@@ -1,3 +1,4 @@
+import { mountDashboard } from "./dashboard-ui.mjs";
 import { chart } from "./lib/charts.mjs";
 import { markdownReport, channelCSV } from "./lib/reports.mjs";
 import {
@@ -37,6 +38,7 @@ try {
   if (!Array.isArray(feedback)) feedback = [];
   feedback = feedback.slice(-200);
 } catch {}
+const dashboard = mountDashboard({ getData: () => ({ rows, dataset }), download });
 const sampleText = await fetch("sample.csv").then((r) => r.text());
 async function loadRealCase() {
   const text = await fetch("datasets/uci-daily-nov2011.csv").then((r) => {
@@ -81,11 +83,13 @@ function download(name, text, type = "application/json") {
   setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
 function view(name) {
+  $("header .export-actions").hidden = name !== "analysis";
   document.querySelectorAll(".view").forEach((e) => (e.hidden = e.id !== name));
   document
     .querySelectorAll("nav button")
     .forEach((e) => e.classList.toggle("active", e.dataset.view === name));
   $("#page-title").textContent = {
+    dashboard: "经营看板 · 一眼看清业务变化",
     analysis: "让运营判断有据可依",
     data: "数据与指标口径",
     evaluation: "每一次迭代，都可验证",
@@ -96,6 +100,7 @@ document
   .querySelectorAll("nav button")
   .forEach((b) => (b.onclick = () => view(b.dataset.view)));
 function refresh() {
+  dashboard.sync();
   let dates = [...new Set(rows.map((r) => r.date))];
   $("#coverage").textContent =
     `${dates[0]} — ${dates.at(-1)} · ${rows.length} 行`;
@@ -574,3 +579,4 @@ $("#use-ai").onchange = () => {
 };
 refresh();
 await run();
+view("dashboard");

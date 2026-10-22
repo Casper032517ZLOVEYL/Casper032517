@@ -43,9 +43,9 @@ class Handler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == "/api/config":
-            return self.reply({"ai": self.current_settings().enabled, "version": "1.2.0", "max_rows": 20000})
+            return self.reply({"ai": self.current_settings().enabled, "version": "1.3.0", "max_rows": 20000})
         if self.path == "/api/health":
-            return self.reply({"ok": True, "version": "1.2.0"})
+            return self.reply({"ok": True, "version": "1.3.0"})
         if urlparse(self.path).path.startswith("/api/"):
             return self.reply({"ok": False, "error": "接口不存在。"}, 404)
         return super().do_GET()
