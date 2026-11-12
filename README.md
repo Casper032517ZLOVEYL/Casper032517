@@ -1,5 +1,7 @@
 # OpsPilot · 真实业务数据分析 Copilot
 
+> 新增个人投研作品：[FinPilot · 财报分析与任务型 Agent](finpilot/README.md) — 支持资料上传、证据定位、可复算指标及模型工具循环；与本项目独立运行。
+
 **上传自己的销售/渠道报表，先检查口径，再输出可复算的指标、图表与报告。**
 
 版本 **1.3.0**。可用于个人本地或受控小团队试点，AI辅助开发。在线默认使用有来源的**UCI真实零售交易**，也可上传自己的CSV/Excel。合成漏斗仅作为历史回归样例保留。
@@ -140,3 +142,4 @@ Dockerfile / compose.yaml     受控部署配置（容器未实测）
 ```
 
 旧PDF、SVG、视频在docs/archive与docs/assets，描述1.0历史版本；当前能力以1.3文档和代码为准。原创代码与项目文档采用[MIT许可](LICENSE)；UCI派生数据遵循独立CC BY4.0许可，详见[第三方署名](THIRD_PARTY_NOTICES.md)。
+

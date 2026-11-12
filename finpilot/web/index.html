@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>FinPilot · 投研任务工作台</title><link rel="stylesheet" href="/styles.css"></head>
+<body>
+<aside class="sidebar">
+  <a class="brand" href="/" aria-label="FinPilot首页"><span class="brand-icon">F</span>FinPilot<span class="version">0.1</span></a>
+  <div class="nav-label">WORKSPACE</div><div class="nav-item active">◈ &nbsp; 投研工作台</div>
+  <div class="sidebar-bottom"><span class="status-dot"></span> 本地会话 · 文件仅保存在内存<br><small>可溯源的研究，从一个问题开始。</small></div>
+</aside>
+<main>
+  <header><div class="breadcrumb">个人研究 / <strong>任务工作台</strong></div><span class="pill">PUBLIC SOURCE · 本地运行</span></header>
+  <section class="intro"><div><p class="eyebrow">EVIDENCE FIRST, ALWAYS.</p><h1>把问题，变成有依据的研究。</h1><p class="muted">载入财务数据、拆解研究任务，在每一步查看计算和证据。</p></div><div class="intro-mark">F<span>↗</span></div></section>
+  <div class="workspace">
+    <section class="left-column">
+      <div class="card sources"><div class="card-title"><h2><span class="step">01</span>研究资料</h2><span id="scope-count" class="muted">尚未载入</span></div>
+        <label class="dropzone" id="dropzone"><span class="upload-icon">↥</span><strong>选择财报与财务数据</strong><span>CSV · PDF · TXT · MD</span><small>单文件5MB，合计10MB，最多6个文件</small><input id="files" type="file" accept=".csv,.pdf,.txt,.md" multiple></label>
+        <div class="source-actions"><button id="sample" class="button secondary">载入 Apple 公开样例</button><button id="clear" class="text-button">清空会话</button></div>
+        <p class="hint">CSV用于可复算指标；PDF仅用于原文检索。样例为FY2023/2024历史数据。</p><div id="source-list"></div>
+        <details class="contract"><summary>查看CSV格式要求</summary><p>必填列：company, period, currency, unit, revenue, net_income, operating_cash_flow。数值允许留空；period用FY2024或FY2024-Q1（单季度），unit用one/thousand/million。可选source、location。上传会替换当前资料并清空追问上下文。</p></details>
+      </div>
+      <div class="card task"><div class="card-title"><h2><span class="step">02</span>研究任务</h2><span class="muted">支持连续追问</span></div>
+        <div class="modes" role="group" aria-label="运行模式"><button class="mode selected" data-mode="offline">离线流程<span>无需密钥 · 规则计算</span></button><button class="mode" data-mode="agent">模型 Agent<span>工具调用 · 按结果补查</span></button></div>
+        <p id="model-state" class="hint"></p>
+        <label id="consent-label" class="consent" hidden><input type="checkbox" id="consent">同意把问题、最近4轮摘要及工具返回的数据片段发送到所配置的模型服务商。</label>
+        <label class="sr-only" for="question">输入研究任务</label><textarea id="question" rows="4" maxlength="2000" placeholder="例如：分析 Apple 的营收、利润和经营现金流变化，指出需要进一步核实的问题。">分析 Apple 的营收、利润和经营现金流变化，指出需要进一步核实的问题。</textarea>
+        <div class="suggestions"><button data-question="分析 Apple 的营收、利润和经营现金流变化">财务变化</button><button data-question="Apple 的利润增长是否有经营现金流支撑？">现金流与利润</button><button data-question="检索资料中提到的风险因素，并列出证据">检索风险证据</button></div>
+        <div class="run-row"><span id="run-hint" class="hint">先载入资料，再开始研究</span><button class="button primary" id="run">开始研究 <span>↗</span></button></div>
+      </div>
+      <div class="card tracking"><div class="card-title"><h2><span class="step">03</span>跟踪变化</h2><span class="muted">手动更新</span></div><p class="hint">下载本次数据快照，下次载入新数据后上传旧快照，查看新增期间和数值变化。</p><div class="source-actions"><button id="snapshot" class="button secondary">保存数据快照</button><label class="button secondary" for="old-snapshot">对比历史快照</label><input id="old-snapshot" type="file" accept=".json" hidden></div><div id="changes"></div></div>
+    </section>
+    <section class="right-column" aria-label="研究结果"><div class="results-heading"><h2>研究结果</h2><span id="result-badge" class="pill">等待任务</span></div>
+      <div id="notice" role="status" aria-live="polite"></div>
+      <div id="empty" class="card empty"><div class="empty-icon">⌕</div><h3>让每一个结论，都有出处。</h3><p>从左侧载入样例，体验<br>指标计算 → 证据定位 → 报告导出。</p><div class="empty-tags"><span>可复算指标</span><span>来源可查</span><span>执行记录</span></div></div>
+      <div id="output" hidden><div class="result-actions"><button id="export-md" class="text-button">↓ Markdown报告</button><button id="export-json" class="text-button">↓ 完整执行JSON</button></div>
+        <div class="tabs" role="tablist"><button class="tab active" data-tab="report" role="tab" aria-selected="true">研究简报</button><button class="tab" data-tab="evidence" role="tab" aria-selected="false">证据资料</button><button class="tab" data-tab="trace" role="tab" aria-selected="false">执行记录</button></div>
+        <div id="report" class="tab-panel"></div><div id="evidence" class="tab-panel" hidden></div><div id="trace" class="tab-panel" hidden></div>
+      </div>
+    </section>
+  </div>
+  <footer>FinPilot 0.1 · 个人投研辅助原型 · 资料时效以文件为准，结论须人工复核</footer>
+</main><script type="module" src="/app.js"></script>
+</body></html>

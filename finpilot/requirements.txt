@@ -1,0 +1,2 @@
+# Only needed for text-based PDF uploads; CSV/TXT/MD and server use stdlib.
+pypdf>=6.0,<8.0
